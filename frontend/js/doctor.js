@@ -7,28 +7,7 @@ document.getElementById(
 "doctorRegisterForm"
 );
 
-function setButtonLoading(
-    button,
-    isLoading,
-    loadingText
-) {
-    if (!button) return;
-    if (isLoading) {
-        button.dataset.originalText =
-            button.innerText;
-        button.innerText =
-            loadingText ||
-            "Please wait...";
-        button.disabled = true;
-        return;
-    }
-    button.disabled = false;
-    if (button.dataset.originalText) {
-        button.innerText =
-            button.dataset.originalText;
-        delete button.dataset.originalText;
-    }
-}
+// `setButtonLoading` is provided by config.js
 
 if(doctorRegisterForm){
 
@@ -429,19 +408,19 @@ async function loadDoctorAppointments() {
                     <p>
                         Patient:
                         ${appointment.patientId?.name || "Unknown Patient"}
-                    </p>
-
-                    <p>
-                        Email:
-                        ${appointment.patientId?.email || "Not available"}
-                    </p>
-
-                    <p>
-                        Date:
-                        ${appointment.appointmentDate}
-                    </p>
-
-                    <p>
+                    $
+                    appointment.status === "Pending"
+                    ?
+                    `
+                    <button type="button"
+                    onclick="updateAppointmentStatus(
+                    '${appointment._id}',
+                    'Approved'
+                    )
+                    class="btn doctor-btn">
+                    Approve
+                    </button>
+                    `
                         Time:
                         ${appointment.appointmentTime}
                     </p>

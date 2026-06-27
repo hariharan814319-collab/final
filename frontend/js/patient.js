@@ -30,45 +30,27 @@ if (registerForm) {
                     "password"
                 ).value;
 
+            const submitBtn = registerForm.querySelector('button[type="submit"]');
+            setButtonLoading(submitBtn, true, "Registering...");
+
             try {
+                const response = await fetch(`${API_BASE}/auth/register`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ name, email, password, role: "patient" }),
+                });
 
-                const response =
-                    await fetch(
-                        `${API_BASE}/auth/register`,
-                        {
-
-                            method: "POST",
-
-                            headers: {
-                                "Content-Type":
-                                    "application/json"
-                            },
-
-                            body: JSON.stringify({
-                                name,
-                                email,
-                                password,
-                                role: "patient"
-                            })
-                        }
-                    );
-
-                const data =
-                    await response.json();
-
+                const data = await response.json();
                 alert(data.message);
 
-                if (
-                    response.ok
-                ) {
-
-                    window.location.href =
-                        "login.html";
+                if (response.ok) {
+                    window.location.href = "login.html";
                 }
-
             } catch (error) {
-
                 console.log(error);
+                alert("Registration failed. Please try again.");
+            } finally {
+                setButtonLoading(submitBtn, false, "REGISTER");
             }
         }
     );
@@ -101,64 +83,31 @@ if (loginForm) {
                     "password"
                 ).value;
 
+            const submitBtn = loginForm.querySelector('button[type="submit"]');
+            setButtonLoading(submitBtn, true, "Logging in...");
+
             try {
+                const response = await fetch(`${API_BASE}/auth/login`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ email, password }),
+                });
 
-                const response =
-                    await fetch(
-                        `${API_BASE}/auth/login`,
-                        {
+                const data = await response.json();
 
-                            method: "POST",
-
-                            headers: {
-                                "Content-Type":
-                                    "application/json"
-                            },
-
-                            body: JSON.stringify({
-                                email,
-                                password
-                            })
-                        }
-                    );
-
-                const data =
-                    await response.json();
-
-                if (
-                    response.ok
-                ) {
-
-                    localStorage.setItem(
-                        "token",
-                        data.token
-                    );
-
-                    localStorage.setItem(
-                        "user",
-                        JSON.stringify(
-                            data.user
-                        )
-                    );
-
-                    alert(
-                        "Login Successful"
-                    );
-
-                    window.location.href =
-                        "dashboard.html";
+                if (response.ok) {
+                    localStorage.setItem("token", data.token);
+                    localStorage.setItem("user", JSON.stringify(data.user));
+                    alert("Login Successful");
+                    window.location.href = "dashboard.html";
+                } else {
+                    alert(data.message);
                 }
-
-                else {
-
-                    alert(
-                        data.message
-                    );
-                }
-
             } catch (error) {
-
                 console.log(error);
+                alert("Login failed. Please try again.");
+            } finally {
+                setButtonLoading(submitBtn, false, "Login");
             }
         }
     );
@@ -370,6 +319,8 @@ if (bookBtn) {
         "click",
         async () => {
 
+            setButtonLoading(bookBtn, true, "Booking...");
+
             const user =
                 JSON.parse(
                     localStorage.getItem(
@@ -425,6 +376,7 @@ if (bookBtn) {
             alert(data.message);
 
             loadAppointments();
+            setButtonLoading(bookBtn, false, "Book Appointment");
         }
     );
 }
@@ -443,6 +395,8 @@ uploadDocumentsBtn.addEventListener(
 "click",
 
 async ()=>{
+
+    setButtonLoading(uploadDocumentsBtn, true, "Uploading...");
 
 const formData =
 new FormData();
@@ -501,6 +455,8 @@ data.message
 );
 
 loadPatientProfile();
+
+ setButtonLoading(uploadDocumentsBtn, false, "Upload Documents");
 
 }
 

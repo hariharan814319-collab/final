@@ -30,3 +30,18 @@ function setImageSrc(imgEl, path, fallbackUrl) {
         imgEl.src = fallbackUrl;
     }
 }
+
+function setButtonLoading(button, isLoading, loadingText) {
+    if (!button) return;
+    if (isLoading) {
+        button.dataset.originalText = button.innerText;
+        button.innerText = loadingText || "Please wait...";
+        button.disabled = true;
+        return;
+    }
+    button.disabled = false;
+    if (button.dataset.originalText) {
+        button.innerText = button.dataset.originalText;
+        delete button.dataset.originalText;
+    }
+}
