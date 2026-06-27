@@ -1,0 +1,903 @@
+PHOENIX HOSPITAL MANAGEMENT SYSTEM
+
+=================================
+SYSTEM OVERVIEW
+===============
+
+3 USER ROLES
+
+1. Patient
+2. Doctor
+3. Admin
+
+DATABASE COLLECTIONS
+
+1. Users
+2. Doctors
+3. Appointments
+4. OTPs (optional)
+
+=================================
+LANDING PAGE
+============
+
+FILE
+
+index.html
+
+BUTTONS
+
+Patient Portal
+Doctor Portal
+Admin Portal
+
+ACTION
+
+Redirect to respective login/register pages.
+
+NO DATABASE ACTION.
+
+=================================
+PATIENT MODULE
+==============
+
+---
+
+## PATIENT REGISTER
+
+PAGE
+
+patient/register.html
+
+BUTTON
+
+REGISTER
+
+ACTION
+
+Collect:
+
+name
+email
+password
+
+API
+
+POST /api/auth/register
+
+DATABASE
+
+Create User
+
+{
+role: "patient"
+}
+
+SUCCESS
+
+Patient stored in MongoDB
+
+Redirect:
+
+patient/login.html
+
+---
+
+## PATIENT LOGIN
+
+PAGE
+
+patient/login.html
+
+BUTTON
+
+LOGIN
+
+ACTION
+
+Collect:
+
+email
+password
+
+API
+
+POST /api/auth/login
+
+BACKEND
+
+Verify password
+
+Generate JWT
+
+FRONTEND STORAGE
+
+localStorage.token
+
+localStorage.user
+
+SUCCESS
+
+Redirect
+
+patient/dashboard.html
+
+---
+
+## PATIENT DASHBOARD LOAD
+
+AUTO LOAD
+
+loadPatientProfile()
+
+API
+
+GET /api/profile/patient
+
+LOADS
+
+Patient Name
+
+Patient Email
+
+Profile Photo
+
+Appointment Count
+
+DATABASE READ
+
+Users Collection
+
+---
+
+## UPLOAD DOCUMENTS
+
+BUTTON
+
+Upload Documents
+
+FILES
+
+Profile Photo
+
+Aadhaar
+
+API
+
+POST /api/patient-documents/upload
+
+DATABASE UPDATE
+
+User.profilePhoto
+
+User.aadhaarDocument
+
+SUCCESS
+
+Files stored
+
+Patient profile updated
+
+UI refreshed
+
+---
+
+## LOAD DOCTORS
+
+AUTO LOAD
+
+loadDoctors()
+
+API
+
+GET /api/doctors
+
+DATABASE READ
+
+Doctors Collection
+
+UI
+
+Populate dropdown
+
+doctorSelect
+
+---
+
+## BOOK APPOINTMENT
+
+BUTTON
+
+Book Appointment
+
+FIELDS
+
+doctorId
+
+appointmentDate
+
+appointmentTime
+
+API
+
+POST /api/appointments
+
+DATABASE INSERT
+
+Appointment
+
+{
+patientId,
+doctorId,
+date,
+time,
+status:"Pending"
+}
+
+SUCCESS
+
+Appointment stored
+
+UI reload
+
+---
+
+## LOAD APPOINTMENTS
+
+AUTO LOAD
+
+loadAppointments()
+
+API
+
+GET /api/appointments
+
+DATABASE READ
+
+Appointments
+
+FILTER
+
+Current Patient Only
+
+SHOW
+
+Doctor
+
+Date
+
+Time
+
+Status
+
+---
+
+## PATIENT LOGOUT
+
+BUTTON
+
+Logout
+
+ACTION
+
+localStorage.clear()
+
+Redirect
+
+index.html
+
+=================================
+DOCTOR MODULE
+=============
+
+---
+
+## DOCTOR REGISTER
+
+PAGE
+
+doctor/register.html
+
+BUTTON
+
+Register
+
+FIELDS
+
+doctorName
+specialization
+experience
+fee
+hospital
+license
+aadhaar
+days
+time
+
+API
+
+POST /api/doctors/register
+
+DATABASE
+
+Create Doctor
+
+verificationStatus:
+
+Pending
+
+SUCCESS
+
+Redirect
+
+otp.html
+
+---
+
+## SEND OTP
+
+BUTTON
+
+Send OTP
+
+API
+
+POST /api/otp/send
+
+DATABASE
+
+Store OTP
+
+SEND EMAIL
+
+Doctor Email
+
+SUCCESS
+
+OTP Delivered
+
+---
+
+## VERIFY OTP
+
+BUTTON
+
+Verify OTP
+
+API
+
+POST /api/otp/verify
+
+DATABASE
+
+Mark verified
+
+SUCCESS
+
+Redirect
+
+documents.html
+
+---
+
+## UPLOAD DOCUMENTS
+
+BUTTON
+
+Upload Documents
+
+FILES
+
+Profile Photo
+
+Aadhaar
+
+Medical License
+
+Degree Certificate
+
+API
+
+POST /api/documents/upload
+
+DATABASE UPDATE
+
+Doctor.profilePhoto
+
+Doctor.aadhaarDocument
+
+Doctor.licenseDocument
+
+Doctor.degreeDocument
+
+SUCCESS
+
+Doctor record updated
+
+Redirect
+
+login.html
+
+---
+
+## DOCTOR LOGIN
+
+PAGE
+
+doctor/login.html
+
+BUTTON
+
+LOGIN
+
+API
+
+POST /api/auth/login
+
+STORAGE
+
+token
+
+user
+
+SUCCESS
+
+Redirect
+
+doctor/dashboard.html
+
+---
+
+## DOCTOR DASHBOARD LOAD
+
+AUTO LOAD
+
+loadDoctorProfile()
+
+API
+
+GET /api/profile/doctor
+
+SHOW
+
+Doctor Name
+
+Email
+
+Hospital
+
+Photo
+
+Verification Status
+
+DATABASE READ
+
+Doctor Collection
+
+---
+
+## UPDATE PROFILE
+
+BUTTON
+
+Update Profile
+
+FIELDS
+
+Fee
+
+Available Days
+
+Available Time
+
+Hospital Name
+
+API
+
+PUT /api/profile/doctor
+
+DATABASE UPDATE
+
+Doctor Document
+
+SUCCESS
+
+Profile Updated
+
+---
+
+## LOAD APPOINTMENTS
+
+AUTO LOAD
+
+loadDoctorAppointments()
+
+API
+
+GET /api/doctor/appointments
+
+DATABASE READ
+
+Appointments
+
+FILTER
+
+Current Doctor Only
+
+SHOW
+
+Patient Name
+
+Patient Email
+
+Date
+
+Time
+
+Status
+
+---
+
+## APPROVE APPOINTMENT
+
+BUTTON
+
+Approve
+
+API
+
+PUT /api/doctor/appointment/:id
+
+DATABASE UPDATE
+
+Appointment.status
+
+Pending
+
+→
+
+Approved
+
+SUCCESS
+
+Appointment updated
+
+Dashboard reload
+
+---
+
+## DOCTOR DASHBOARD STATS
+
+AUTO CALCULATE
+
+Pending Count
+
+Approved Count
+
+SOURCE
+
+Appointments Array
+
+NO DATABASE WRITE
+
+---
+
+## DOCTOR LOGOUT
+
+BUTTON
+
+Logout
+
+ACTION
+
+Clear LocalStorage
+
+Redirect
+
+index.html
+
+=================================
+ADMIN MODULE
+============
+
+---
+
+## ADMIN LOGIN
+
+PAGE
+
+admin/login.html
+
+BUTTON
+
+LOGIN
+
+API
+
+POST /api/auth/login
+
+STORAGE
+
+token
+
+user
+
+SUCCESS
+
+Redirect
+
+dashboard.html
+
+---
+
+## ADMIN DASHBOARD LOAD
+
+AUTO LOAD
+
+loadAdminStats()
+
+API
+
+GET /api/admin/stats
+
+DATABASE READ
+
+Doctors
+
+Patients
+
+Appointments
+
+SHOW
+
+Total Doctors
+
+Total Patients
+
+Total Appointments
+
+Pending Doctors
+
+Approved Doctors
+
+---
+
+## ADD DOCTOR
+
+BUTTON
+
+Add Doctor
+
+API
+
+POST /api/doctors
+
+DATABASE INSERT
+
+Doctor Record
+
+SUCCESS
+
+Doctor List Reload
+
+Stats Reload
+
+---
+
+## LOAD DOCTORS
+
+AUTO LOAD
+
+loadDoctorsAdmin()
+
+API
+
+GET /api/doctors
+
+DATABASE READ
+
+Doctors Collection
+
+SHOW
+
+Doctor Name
+
+Specialization
+
+Hospital
+
+Verification Status
+
+---
+
+## APPROVE DOCTOR
+
+BUTTON
+
+Approve
+
+API
+
+PUT /api/admin/approve-doctor/:id
+
+DATABASE UPDATE
+
+verificationStatus
+
+Pending
+
+→
+
+Approved
+
+SUCCESS
+
+Doctor Can Practice
+
+Dashboard Reload
+
+---
+
+## REJECT DOCTOR
+
+BUTTON
+
+Reject
+
+API
+
+PUT /api/admin/reject-doctor/:id
+
+DATABASE UPDATE
+
+verificationStatus
+
+Pending
+
+→
+
+Rejected
+
+SUCCESS
+
+Dashboard Reload
+
+---
+
+## DELETE DOCTOR
+
+BUTTON
+
+Delete
+
+API
+
+DELETE /api/doctors/:id
+
+DATABASE DELETE
+
+Doctor Record
+
+SUCCESS
+
+Doctor Removed
+
+Stats Reload
+
+---
+
+## ADMIN LOGOUT
+
+BUTTON
+
+Logout
+
+ACTION
+
+localStorage.clear()
+
+Redirect
+
+index.html
+
+=================================
+DATA STATUS FLOW
+================
+
+Doctor Verification
+
+Pending
+→ Approved
+→ Rejected
+
+Appointment Status
+
+Pending
+→ Approved
+→ Completed
+
+=================================
+FRONTEND AUTO FUNCTIONS
+=======================
+
+PATIENT
+
+loadPatientProfile()
+
+loadDoctors()
+
+loadAppointments()
+
+DOCTOR
+
+loadDoctorProfile()
+
+loadDoctorAppointments()
+
+ADMIN
+
+loadAdminStats()
+
+loadDoctorsAdmin()
+
+=================================
+LOCAL STORAGE FLOW
+==================
+
+LOGIN
+
+token
+
+user
+
+LOGOUT
+
+clear()
+
+=================================
+FILE STORAGE FLOW
+=================
+
+PATIENT
+
+profilePhoto
+
+aadhaarDocument
+
+DOCTOR
+
+profilePhoto
+
+aadhaarDocument
+
+licenseDocument
+
+degreeDocument
+
+=================================
+FULL USER JOURNEY
+=================
+
+Patient Registers
+→ Login
+→ Upload Documents
+→ View Doctors
+→ Book Appointment
+
+Doctor Registers
+→ OTP Verify
+→ Upload Documents
+→ Login
+→ Wait Admin Approval
+→ Approve Appointment
+
+Admin Login
+→ Review Doctors
+→ Approve Doctor
+→ Monitor Statistics
+
+Patient Books Appointment
+→ Appointment Stored
+→ Doctor Approves
+→ Status Changes
+→ Patient Sees Updated Status

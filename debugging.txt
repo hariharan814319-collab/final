@@ -1,0 +1,255 @@
+ROLE:
+You are a Senior MERN Full Stack Debugging Engineer.
+
+CONTEXT:
+Backend APIs are fully tested in Postman and working correctly.
+
+Task:
+Debug ONLY frontend integration issues.
+
+Complete API List
+Authentication
+Register Patient
+POST /api/auth/register
+Login
+POST /api/auth/login
+Doctor APIs
+Get All Doctors
+GET /api/doctors
+Get Single Doctor
+GET /api/doctors/:id
+Create Doctor (Admin)
+POST /api/doctors
+Update Doctor
+PUT /api/doctors/:id
+Delete Doctor
+DELETE /api/doctors/:id
+Doctor Self Registration
+Register Doctor
+POST /api/doctors/register
+OTP APIs
+Send OTP
+POST /api/otp/send
+Verify OTP
+POST /api/otp/verify
+Doctor Document APIs
+Upload Doctor Documents
+POST /api/documents/upload
+Patient Document APIs
+Upload Patient Documents
+POST /api/patient-documents/upload
+Profile APIs
+Doctor Profile
+GET /api/profile/doctor
+Update Doctor Profile
+PUT /api/profile/doctor
+Patient Profile
+GET /api/profile/patient
+Appointment APIs
+Create Appointment
+POST /api/appointments
+Get All Appointments
+GET /api/appointments
+Doctor Dashboard APIs
+Get Doctor Dashboard
+GET /api/doctor/appointments
+Update Appointment Status
+PUT /api/doctor/appointment/:id
+
+Body:
+
+{
+  "status":"Approved"
+}
+
+or
+
+{
+  "status":"Completed"
+}
+
+or
+
+{
+  "status":"Cancelled"
+}
+Admin APIs
+Dashboard Stats
+GET /api/admin/stats
+Pending Doctors
+GET /api/admin/pending-doctors
+Approve Doctor
+PUT /api/admin/approve-doctor/:id
+Reject Doctor
+PUT /api/admin/reject-doctor/:id
+Backend Status
+Authentication        ✅
+JWT                   ✅
+Doctor CRUD           ✅
+Appointment System    ✅
+Doctor Registration   ✅
+OTP Verification      ✅
+Doctor Approval       ✅
+Doctor Dashboard      ✅
+Patient Dashboard     ✅
+Admin Dashboard       ✅
+Document Upload       ✅
+
+Project Structure:
+
+frontend/
+│
+├── patient/
+│   ├── register.html
+│   ├── login.html
+│   └── dashboard.html
+│
+├── doctor/
+│   ├── register.html
+│   ├── otp.html
+│   ├── documents.html
+│   ├── login.html
+│   └── dashboard.html
+│
+├── admin/
+│   ├── login.html
+│   └── dashboard.html
+│
+├── js/
+│   ├── config.js
+│   ├── patient.js
+│   ├── doctor.js
+│   └── admin.js
+│
+└── css/
+└── style.css
+
+IMPORTANT:
+
+Do NOT modify backend.
+
+Assume all APIs work.
+
+Check frontend only.
+
+For every feature verify:
+
+1. HTML element exists.
+2. ID matches JavaScript selector.
+3. Event listener is attached.
+4. Fetch URL is correct.
+5. HTTP method is correct.
+6. Authorization token exists.
+7. Request body fields match backend schema.
+8. Response fields match frontend rendering.
+9. Redirect path is correct.
+10. File upload field names match multer names.
+11. LocalStorage keys match everywhere.
+12. Dynamic elements render correctly.
+13. Buttons are clickable.
+14. Dashboard auto-load functions execute.
+15. Images load correctly.
+16. Data persists after refresh.
+
+For EACH bug found provide:
+
+BUG:
+File:
+Line/Section:
+Reason:
+
+FIX:
+Exact code to replace.
+
+EXPECTED RESULT:
+What should happen after fixing.
+
+ALSO VERIFY:
+
+PATIENT FLOW
+
+Register
+
+Login
+
+Load Profile
+
+Upload Profile Photo
+
+Upload Aadhaar
+
+Load Doctors
+
+Book Appointment
+
+Load Appointments
+
+Logout
+
+DOCTOR FLOW
+
+Register
+
+Send OTP
+
+Verify OTP
+
+Upload Documents
+
+Login
+
+Load Profile
+
+Update Profile
+
+Load Appointments
+
+Approve Appointment
+
+Dashboard Stats
+
+Logout
+
+ADMIN FLOW
+
+Login
+
+Load Statistics
+
+Pending Doctors Count
+
+Approved Doctors Count
+
+Load Doctors
+
+Approve Doctor
+
+Reject Doctor
+
+Delete Doctor
+
+Logout
+
+FINAL OUTPUT:
+
+Frontend Health Report
+
+Working Features
+
+Broken Features
+
+Missing IDs
+
+Wrong Routes
+
+Wrong Field Names
+
+Missing Event Listeners
+
+Missing Token Usage
+
+File Upload Errors
+
+Required Fixes (Priority Order)
+
+Overall Completion Percentage

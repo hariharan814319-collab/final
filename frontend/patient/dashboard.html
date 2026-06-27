@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>PHOENIX Patient Dashboard</title>
+
+    <link rel="stylesheet"
+        href="../css/style.css">
+
+</head>
+
+<body>
+
+    <div class="orb orb-pink"></div>
+    <div class="orb orb-blue"></div>
+    <div class="orb orb-green"></div>
+
+    <div class="dashboard-container">
+
+        <!-- HEADER -->
+
+        <div class="dashboard-header">
+
+            <h1>
+                PHOENIX
+            </h1>
+
+            <button
+                id="logoutBtn"
+                class="btn patient-btn">
+
+                Logout
+
+            </button>
+
+        </div>
+
+        <!-- PROFILE -->
+
+        <!-- PROFILE CARD -->
+
+<div class="dashboard-card stat-pink">
+
+    <h2>
+        Patient Profile
+    </h2>
+
+    <br>
+
+    <img
+        id="patientPhoto"
+        src="../assets/default-user.png"
+        class="profile-photo">
+
+    <br><br>
+
+    <h3 id="patientName">
+        Loading...
+    </h3>
+
+    <p id="patientEmail">
+        Loading...
+    </p>
+
+    <br>
+
+    <div class="stats-box">
+
+        <h3>
+            Total Appointments
+        </h3>
+
+        <p id="totalAppointments">
+            0
+        </p>
+
+    </div>
+
+</div>
+<!-- DOCUMENT UPLOAD -->
+
+<div class="dashboard-card">
+
+    <h2>
+        Upload Documents
+    </h2>
+
+    <br>
+
+    <input
+        type="file"
+        id="profilePhotoFile"
+        class="glass-input">
+
+    <br><br>
+
+    <input
+        type="file"
+        id="aadhaarFile"
+        class="glass-input">
+
+    <br><br>
+
+    <button
+        id="uploadDocumentsBtn"
+        class="btn patient-btn">
+
+        Upload Documents
+
+    </button>
+    <br><br>
+
+<img
+id="aadhaarPreview"
+style="
+width:200px;
+display:none;
+border-radius:15px;
+">
+
+</div>
+
+        <!-- BOOK APPOINTMENT -->
+
+        <div class="dashboard-card">
+
+            <h2>
+                Book Appointment
+            </h2>
+
+            <br>
+
+            <select
+                id="doctorSelect"
+                class="glass-input">
+
+            </select>
+
+            <br><br>
+
+            <input
+                type="date"
+                id="appointmentDate"
+                class="glass-input">
+
+            <br><br>
+
+            <input
+                type="text"
+                id="appointmentTime"
+                class="glass-input"
+                placeholder="10:30 AM">
+
+            <br><br>
+
+            <button
+                id="bookBtn"
+                class="btn patient-btn">
+
+                Book Appointment
+
+            </button>
+
+        </div>
+
+        <!-- APPOINTMENTS -->
+
+        <div class="dashboard-card">
+
+            <h2>
+                My Appointments
+            </h2>
+
+            <br>
+
+            <div id="appointmentsList">
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script src="../js/config.js"></script>
+    <script src="../js/patient.js"></script>
+
+</body>
+
+</html>

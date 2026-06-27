@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>PHOENIX Admin Dashboard</title>
+
+    <link rel="stylesheet" href="../css/style.css">
+
+</head>
+
+<body>
+
+<div class="dashboard-container">
+
+    <div class="dashboard-header">
+
+        <h1>
+            PHOENIX ADMIN
+        </h1>
+
+        <button
+            id="adminLogoutBtn"
+            class="btn">
+
+            Logout
+
+        </button>
+
+    </div>
+
+    <!-- STATS -->
+
+    <div class="dashboard-grid">
+
+    <div class="dashboard-card stat-pink">
+
+        <h3>Total Doctors</h3>
+
+        <h1 id="totalDoctors">
+            0
+        </h1>
+
+    </div>
+
+    <div class="dashboard-card stat-blue">
+
+        <h3>Total Patients</h3>
+
+        <h1 id="totalPatients">
+            0
+        </h1>
+
+    </div>
+
+    <div class="dashboard-card stat-green">
+
+        <h3>Total Appointments</h3>
+
+        <h1 id="totalAppointments">
+            0
+        </h1>
+
+    </div>
+
+    <div class="dashboard-card stat-pink">
+
+        <h3>Pending Doctors</h3>
+
+        <h1 id="pendingDoctors">
+            0
+        </h1>
+
+    </div>
+
+    <div class="dashboard-card stat-green">
+
+        <h3>Approved Doctors</h3>
+
+        <h1 id="approvedDoctors">
+            0
+        </h1>
+
+    </div>
+
+</div>
+
+    <!-- ADD DOCTOR -->
+
+    <div class="dashboard-card">
+
+        <h2>Add Doctor</h2>
+
+        <br>
+
+        <form id="doctorForm">
+
+            <input
+                type="text"
+                id="doctorName"
+                class="glass-input"
+                placeholder="Doctor Name"
+                required>
+
+            <br><br>
+
+            <input
+                type="text"
+                id="specialization"
+                class="glass-input"
+                placeholder="Specialization"
+                required>
+
+            <br><br>
+
+            <input
+                type="number"
+                id="experience"
+                class="glass-input"
+                placeholder="Experience"
+                required>
+
+            <br><br>
+
+            <input
+                type="number"
+                id="consultationFee"
+                class="glass-input"
+                placeholder="Consultation Fee"
+                required>
+
+            <br><br>
+
+            <input
+                type="text"
+                id="availableTime"
+                class="glass-input"
+                placeholder="10 AM - 2 PM"
+                required>
+
+            <br><br>
+
+            <button
+                class="btn"
+                type="submit">
+
+                Add Doctor
+
+            </button>
+
+        </form>
+
+    </div>
+
+    <!-- DOCTORS LIST -->
+
+    <div class="dashboard-card">
+
+        <h2>
+            Doctors
+        </h2>
+
+        <br>
+        <input
+type="text"
+id="doctorSearch"
+class="glass-input"
+placeholder="Search Doctor">
+
+<br><br>
+
+        <div id="doctorList">
+
+        </div>
+
+    </div>
+
+</div>
+
+<script src="../js/config.js"></script>
+<script src="../js/admin.js"></script>
+
+</body>
+
+</html>

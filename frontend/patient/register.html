@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>PHOENIX - Patient Register</title>
+
+    <link rel="stylesheet"
+        href="../css/style.css">
+
+</head>
+
+<body>
+
+    <div class="orb orb-pink"></div>
+    <div class="orb orb-blue"></div>
+    <div class="orb orb-green"></div>
+
+    <div class="landing-container">
+
+        <div class="glass-card form-card">
+
+            <h1 class="logo small-logo">
+                PHOENIX
+            </h1>
+
+            <p class="subtitle">
+                Patient Registration
+            </p>
+
+            <form id="registerForm">
+
+    <input
+        type="text"
+        id="name"
+        class="glass-input"
+        placeholder="Full Name"
+        required>
+
+    <br><br>
+
+    <input
+        type="email"
+        id="email"
+        class="glass-input"
+        placeholder="Email Address"
+        required>
+
+    <br><br>
+
+    <input
+        type="password"
+        id="password"
+        class="glass-input"
+        placeholder="Password"
+        required>
+
+    <br><br>
+
+    <div class="upload-section">
+
+        <label class="upload-label">
+            Profile Photo
+        </label>
+
+        <input
+            type="file"
+            id="profilePhoto"
+            accept="image/*">
+
+    </div>
+
+    <br>
+
+    <div class="upload-section">
+
+        <label class="upload-label">
+            Aadhaar Document
+        </label>
+
+        <input
+            type="file"
+            id="aadhaarDocument">
+
+    </div>
+
+    <br><br>
+
+    <button
+        type="submit"
+        class="btn patient-btn">
+
+        REGISTER
+
+    </button>
+
+</form>
+
+            <br>
+
+            <p>
+
+                Already have an account?
+
+                <a href="login.html">
+
+                    Login
+
+                </a>
+
+            </p>
+
+        </div>
+
+    </div>
+
+    <script src="../js/config.js"></script>
+    <script src="../js/patient.js"></script>
+
+</body>
+
+</html>

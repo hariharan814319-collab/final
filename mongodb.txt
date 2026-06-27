@@ -1,0 +1,208 @@
+# PHOENIX Hospital Management System – MongoDB Atlas Integration & Backend Debugging Prompt
+
+## Project Overview
+
+I have built a complete MERN Hospital Management System called **PHOENIX**.
+
+The backend is built with:
+
+* Node.js
+* Express.js
+* MongoDB
+* Mongoose
+* JWT Authentication
+* Nodemailer
+* Multer
+* REST APIs
+
+The frontend is HTML, CSS and JavaScript.
+
+The backend works correctly with my local MongoDB setup, but I am now migrating it to MongoDB Atlas for deployment.
+
+---
+
+## Current MongoDB Atlas Configuration
+
+Cluster Name:
+Cluster0
+
+Database User:
+teamred814319_db_user
+
+Role:
+Read and write to any database
+
+Network Access:
+0.0.0.0/0 (Allow access from anywhere)
+
+Connection String:
+
+mongodb+srv://teamred814319_db_user:harisharmi814319@cluster0.oo8bxic.mongodb.net/phoenix?retryWrites=true&w=majority&appName=Cluster0
+
+The same connection string successfully connects through MongoDB Compass.
+
+---
+
+## Backend Stack
+
+Node.js
+
+Express.js
+
+Mongoose
+
+dotenv
+
+JWT
+
+Nodemailer
+
+Multer
+
+MongoDB Atlas
+
+---
+
+## Backend Folder Structure
+
+backend/
+│
+├── config/
+│      db.js
+│
+├── controllers/
+│
+├── middleware/
+│
+├── models/
+│
+├── routes/
+│
+├── uploads/
+│
+├── utils/
+│
+├── package.json
+│
+├── server.js
+│
+└── .env
+
+---
+
+## db.js
+
+The backend connects using:
+
+mongoose.connect(process.env.MONGO_URI)
+
+---
+
+## .env
+
+PORT=5000
+
+MONGO_URI=mongodb+srv://teamred814319_db_user:harisharmi814319@cluster0.oo8bxic.mongodb.net/phoenix?retryWrites=true&w=majority&appName=Cluster0
+
+JWT_SECRET=hospital_secret_key
+
+EMAIL_USER=...
+
+EMAIL_PASS=...
+
+---
+
+## Problem
+
+MongoDB Compass connects successfully.
+
+Windows DNS resolves the SRV records.
+
+Test-NetConnection to port 27017 succeeds.
+
+But Node.js throws:
+
+Database Connection Error
+
+querySrv ECONNREFUSED
+_mongodb._tcp.cluster0.oo8bxic.mongodb.net
+
+Because of this, the backend never starts.
+
+---
+
+## Required Tasks
+
+Please completely debug the backend and make it work with MongoDB Atlas.
+
+Check:
+
+1. db.js
+
+2. server.js
+
+3. package.json
+
+4. mongoose version compatibility
+
+5. mongodb driver compatibility
+
+6. dotenv loading
+
+7. Atlas connection string
+
+8. DNS resolution inside Node.js
+
+9. Windows compatibility
+
+10. Network configuration
+
+11. Any deprecated mongoose options
+
+12. Atlas authentication
+
+13. Database initialization
+
+14. Admin creation script
+
+15. Backend startup sequence
+
+16. Error handling
+
+17. Connection retry logic
+
+18. Connection timeout settings
+
+19. Deployment readiness
+
+20. Any issue preventing successful Atlas connection.
+
+---
+
+## Expected Result
+
+After fixing everything, running:
+
+npm install
+
+npm run dev
+
+should display something similar to:
+
+Connecting to MongoDB Atlas...
+
+MongoDB Connected Successfully
+
+Admin already exists
+
+Server running on Port 5000
+
+The backend should fully connect to MongoDB Atlas.
+
+Collections should automatically be created after inserting data.
+
+All APIs should continue working exactly as they did with local MongoDB.
+
+The backend should then be ready for deployment on services such as Render, Railway, or other Node.js hosting providers without requiring further database modifications.
+
+The solution should preserve all existing functionality, use best practices, and include explanations for every change that is made.

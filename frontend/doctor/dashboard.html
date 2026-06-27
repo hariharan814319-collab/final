@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>PHOENIX Doctor Dashboard</title>
+
+    <link rel="stylesheet"
+        href="../css/style.css">
+
+</head>
+
+<body>
+
+    <div class="orb orb-pink"></div>
+    <div class="orb orb-blue"></div>
+    <div class="orb orb-green"></div>
+
+    <div class="dashboard-container">
+
+        <div class="dashboard-header">
+
+            <h1>
+                Doctor Dashboard
+            </h1>
+
+            <button
+                id="doctorLogoutBtn"
+                class="btn doctor-btn">
+
+                Logout
+
+            </button>
+
+        </div>
+
+        <!-- PROFILE -->
+
+        <div class="dashboard-card stat-blue">
+
+    <h2>
+        Doctor Profile
+    </h2>
+
+    <br>
+
+    <img
+        id="doctorPhoto"
+        src="../assets/default-doctor.png"
+        class="profile-image">
+
+    <br><br>
+
+    <h3 id="doctorName">
+        Loading...
+    </h3>
+
+    <p id="doctorEmail">
+        Loading...
+    </p>
+
+    <p id="doctorHospital">
+        Loading...
+    </p>
+
+    <br>
+
+    <div class="verification-box">
+
+        Status :
+
+        <span id="verificationStatus">
+
+            Loading...
+
+        </span>
+
+    </div>
+
+</div>
+<div class="dashboard-card">
+
+    <h2>
+        Appointment Statistics
+    </h2>
+
+    <br>
+
+    <div class="stats-grid">
+
+        <div class="stat-box">
+
+            <h3>
+                Pending
+            </h3>
+
+            <h1 id="pendingCount">
+                0
+            </h1>
+
+        </div>
+
+        <div class="stat-box">
+
+            <h3>
+                Approved
+            </h3>
+
+            <h1 id="approvedCount">
+                0
+            </h1>
+
+        </div>
+
+    </div>
+
+</div>
+
+        <!-- APPOINTMENTS -->
+
+        <div class="dashboard-card">
+
+            <h2>
+                Patient Appointments
+            </h2>
+
+            <br>
+
+            <div id="doctorAppointments">
+
+            </div>
+
+        </div>
+        <div class="dashboard-card">
+
+    <h2>
+        Update Profile
+    </h2>
+
+    <br>
+
+    <input
+        type="number"
+        id="consultationFee"
+        class="glass-input"
+        placeholder="Consultation Fee">
+
+    <br><br>
+
+    <input
+        type="text"
+        id="availableDays"
+        class="glass-input"
+        placeholder="Monday,Wednesday,Friday">
+
+    <br><br>
+
+    <input
+        type="text"
+        id="availableTime"
+        class="glass-input"
+        placeholder="10 AM - 4 PM">
+
+    <br><br>
+
+    <input
+        type="text"
+        id="hospitalName"
+        class="glass-input"
+        placeholder="Hospital Name">
+
+    <br><br>
+
+    <button
+        id="updateProfileBtn"
+        class="btn doctor-btn">
+
+        Update Profile
+
+    </button>
+
+</div>
+
+    </div>
+
+    <script src="../js/config.js"></script>
+    <script src="../js/doctor.js"></script>
+
+</body>
+
+</html>
