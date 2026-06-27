@@ -226,14 +226,16 @@ async function loadPatientProfile() {
     ).innerText =
         data.totalAppointments;
 
-    if (
-        data.profilePhoto
-    ) {
+    const patientPhotoElement = document.getElementById(
+        "patientPhoto"
+    );
 
-        document.getElementById(
-            "patientPhoto"
-        ).src =
-            `http://localhost:5000/${data.profilePhoto}`;
+    if (patientPhotoElement) {
+        setImageSrc(
+            patientPhotoElement,
+            data.profilePhoto,
+            DEFAULT_USER_PHOTO
+        );
     }
 }
 
@@ -316,9 +318,8 @@ async function loadAppointments() {
     filteredAppointments.forEach(
         (appointment) => {
             const doctorPhoto =
-                appointment.doctorId &&
-                appointment.doctorId.profilePhoto
-                    ? `http://localhost:5000/${appointment.doctorId.profilePhoto}`
+                appointment.doctorId?.profilePhoto
+                    ? getFileUrl(appointment.doctorId.profilePhoto)
                     : "../assets/default-doctor.png";
 
             appointmentsList.innerHTML +=

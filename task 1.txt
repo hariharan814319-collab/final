@@ -1,0 +1,312 @@
+We have successfully completed Cloudinary integration in the backend.
+
+Project Stack:
+- Frontend: HTML + CSS + Vanilla JavaScript
+- Backend: Express.js
+- Database: MongoDB Atlas
+- File Storage: Cloudinary
+- Deployment:
+    Backend -> Render
+    Frontend -> Netlify
+
+==========================================
+CURRENT BACKEND STATUS
+==========================================
+
+The backend no longer stores uploaded files inside:
+
+uploads/profilePhotos/
+uploads/aadhaar/
+uploads/licenses/
+uploads/degrees/
+
+Instead, every uploaded file is uploaded directly to Cloudinary using multer-storage-cloudinary.
+
+MongoDB now stores complete Cloudinary URLs such as:
+
+https://res.cloudinary.com/<cloud_name>/image/upload/v1234567890/phoenix/profilePhotos/profile.jpg
+
+instead of
+
+uploads/profilePhotos/profile.jpg
+
+Therefore the frontend must NEVER build local upload URLs anymore.
+
+====================================================
+YOUR TASK
+====================================================
+
+Inspect the ENTIRE frontend project.
+
+Check every HTML file.
+
+Check every JavaScript file.
+
+Check every function.
+
+Check every image rendering logic.
+
+Check every document rendering logic.
+
+Check every profile loading function.
+
+Check every doctor listing.
+
+Check every patient profile.
+
+Check every dashboard.
+
+Check every document preview.
+
+Check every place where uploaded files are displayed.
+
+====================================================
+IMPORTANT
+====================================================
+
+Find every code similar to:
+
+API_URL + "/" + profilePhoto
+
+API + "/" + doctor.profilePhoto
+
+"/uploads/" + file
+
+"http://localhost:5000/uploads/..."
+
+backendURL + doctor.profilePhoto
+
+window.location.origin + "/uploads/..."
+
+serverURL + "/uploads/..."
+
+or any concatenation that assumes uploaded files are stored locally.
+
+Replace ALL of them.
+
+====================================================
+NEW LOGIC
+====================================================
+
+Cloudinary already returns a complete URL.
+
+Example:
+
+doctor.profilePhoto
+
+contains
+
+https://res.cloudinary.com/......
+
+Therefore:
+
+OLD
+
+img.src =
+API_URL + "/" + doctor.profilePhoto
+
+NEW
+
+img.src =
+doctor.profilePhoto
+
+----------------------------------------------------
+
+OLD
+
+documentLink.href =
+API + "/" + doctor.degreeDocument
+
+NEW
+
+documentLink.href =
+doctor.degreeDocument
+
+----------------------------------------------------
+
+OLD
+
+licensePreview.src =
+backendURL +
+doctor.licenseDocument
+
+NEW
+
+licensePreview.src =
+doctor.licenseDocument
+
+====================================================
+IF VALUE IS EMPTY
+====================================================
+
+Whenever a profile photo or document does not exist,
+
+do NOT show broken image icons.
+
+Instead,
+
+display
+
+Default Profile Image
+
+or
+
+"No Document Uploaded"
+
+where appropriate.
+
+====================================================
+CHECK ALL PAGES
+====================================================
+
+Inspect and update:
+
+frontend/index.html
+
+frontend/admin/
+
+frontend/doctor/
+
+frontend/patient/
+
+frontend/js/
+
+config.js
+
+doctor.js
+
+patient.js
+
+admin.js
+
+app.js
+
+and every other JavaScript file.
+
+====================================================
+BUTTONS
+====================================================
+
+Ensure all existing buttons continue working.
+
+Do NOT change:
+
+login
+
+register
+
+OTP
+
+appointments
+
+doctor verification
+
+profile editing
+
+booking
+
+dashboard
+
+logout
+
+admin approval
+
+Only update image/document loading logic.
+
+====================================================
+API CALLS
+====================================================
+
+Do NOT change API endpoints.
+
+Do NOT change backend routes.
+
+Do NOT modify authentication.
+
+Only modify how returned image/document URLs are rendered.
+
+====================================================
+VERIFY
+====================================================
+
+After finishing,
+
+verify:
+
+✓ Doctor Profile Photo
+
+✓ Patient Profile Photo
+
+✓ Aadhaar Preview
+
+✓ Degree Preview
+
+✓ License Preview
+
+✓ Uploaded Documents
+
+✓ Doctor Cards
+
+✓ Doctor Dashboard
+
+✓ Patient Dashboard
+
+✓ Admin Dashboard
+
+✓ Appointment Details
+
+✓ Profile Page
+
+✓ Any Image Preview
+
+✓ Any Download Button
+
+====================================================
+DO NOT
+====================================================
+
+Do NOT change backend.
+
+Do NOT change MongoDB.
+
+Do NOT change Cloudinary configuration.
+
+Do NOT change authentication.
+
+Do NOT change API responses.
+
+Only update frontend rendering.
+
+====================================================
+EXPECTED RESULT
+====================================================
+
+Every uploaded image should immediately display from Cloudinary.
+
+Every uploaded PDF/document should open directly from Cloudinary.
+
+No page should reference /uploads/.
+
+No page should reference localhost uploads.
+
+No page should require backend URL concatenation.
+
+The frontend must be fully production-ready for Netlify + Render + MongoDB Atlas + Cloudinary deployment.
+
+====================================================
+FINAL REPORT
+====================================================
+
+After completing the task, provide a report containing:
+
+1. Every file modified.
+
+2. Every line/function changed.
+
+3. Every local upload path removed.
+
+4. Every Cloudinary rendering update.
+
+5. Any remaining frontend issues that should be fixed before production deployment.
+
+Do not modify unrelated code or UI styling.

@@ -80,16 +80,20 @@ const registerDoctor = async (req, res) => {
         `Your OTP is: ${otp}`
       );
     } catch (emailError) {
-      console.error("OTP email send failed:", emailError.message);
+      console.error(
+        "OTP email send failed:",
+        emailError.message
+      );
+      return res.status(500).json({
+        message:
+          "Unable to send OTP email. Please verify email configuration."
+      });
     }
 
     res.status(201).json({
-
       message:
         "Doctor Registration Submitted. OTP sent to your email.",
-
       doctor
-
     });
 
   } catch (error) {

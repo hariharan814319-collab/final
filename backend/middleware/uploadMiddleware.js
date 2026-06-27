@@ -1,42 +1,60 @@
 const multer = require("multer");
-const path = require("path");
 
-const storage = multer.diskStorage({
+const { CloudinaryStorage } =
+require("multer-storage-cloudinary");
 
-  destination: (req, file, cb) => {
+const cloudinary =
+require("../config/cloudinary");
 
-    if (file.fieldname === "profilePhoto") {
-      cb(null, "uploads/profilePhotos");
+const storage =
+new CloudinaryStorage({
+
+    cloudinary,
+
+    params: async (req, file) => {
+
+        let folder = "phoenix";
+
+        if (file.fieldname === "profilePhoto") {
+
+            folder = "phoenix/profilePhotos";
+
+        }
+
+        else if (file.fieldname === "aadhaarDocument") {
+
+            folder = "phoenix/aadhaar";
+
+        }
+
+        else if (file.fieldname === "licenseDocument") {
+
+            folder = "phoenix/licenses";
+
+        }
+
+        else if (file.fieldname === "degreeDocument") {
+
+            folder = "phoenix/degrees";
+
+        }
+
+        return {
+
+            folder,
+
+            resource_type: "auto"
+
+        };
+
     }
-
-    else if (file.fieldname === "aadhaarDocument") {
-      cb(null, "uploads/aadhaar");
-    }
-
-    else if (file.fieldname === "licenseDocument") {
-      cb(null, "uploads/licenses");
-    }
-
-    else if (file.fieldname === "degreeDocument") {
-      cb(null, "uploads/degrees");
-    }
-
-  },
-
-  filename: (req, file, cb) => {
-
-    cb(
-      null,
-      Date.now() +
-      path.extname(file.originalname)
-    );
-
-  }
 
 });
 
 const upload = multer({
-  storage
+
+    storage
+
 });
 
 module.exports = upload;

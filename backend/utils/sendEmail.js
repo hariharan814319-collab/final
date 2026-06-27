@@ -1,33 +1,51 @@
 const nodemailer = require("nodemailer");
-const User = require("../models/User");
+
 const sendEmail = async (
   email,
   subject,
   message
 ) => {
 
-  console.log("EMAIL_USER:", process.env.EMAIL_USER);
-  console.log("EMAIL_PASS:", process.env.EMAIL_PASS);
+  const host =
+    process.env.EMAIL_HOST ||
+    "smtp.gmail.com";
+  const port = parseInt(
+    process.env.EMAIL_PORT,
+    10
+  ) || 587;
+  const secure =
+    process.env.EMAIL_SECURE ===
+    "true";
+  const user = process.env.EMAIL_USER;
+  const pass = process.env.EMAIL_PASS;
+
+  if (!user || !pass) {
+    throw new Error(
+      "Email configuration missing. Please set EMAIL_USER and EMAIL_PASS."
+    );
+  }
 
   const transporter =
     nodemailer.createTransport({
 
-      host: "smtp.gmail.com",
+      host,
 
-      port: 587,
+      port,
 
-      secure: false,
+      secure,
 
       auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
+        user,
+        pass,
       },
 
     });
 
+  await transporter.verify();
+
   await transporter.sendMail({
 
-    from: process.env.EMAIL_USER,
+    from: user,
 
     to: email,
 

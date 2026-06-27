@@ -7,6 +7,29 @@ document.getElementById(
 "doctorRegisterForm"
 );
 
+function setButtonLoading(
+    button,
+    isLoading,
+    loadingText
+) {
+    if (!button) return;
+    if (isLoading) {
+        button.dataset.originalText =
+            button.innerText;
+        button.innerText =
+            loadingText ||
+            "Please wait...";
+        button.disabled = true;
+        return;
+    }
+    button.disabled = false;
+    if (button.dataset.originalText) {
+        button.innerText =
+            button.dataset.originalText;
+        delete button.dataset.originalText;
+    }
+}
+
 if(doctorRegisterForm){
 
 doctorRegisterForm.addEventListener(
@@ -14,22 +37,34 @@ doctorRegisterForm.addEventListener(
 
 async(e)=>{
 
-e.preventDefault();
+    e.preventDefault();
 
-const response =
-await fetch(
+    const registerButton =
+        doctorRegisterForm.querySelector(
+            'button[type="submit"]'
+        );
 
-`${API_BASE}/doctors/register`,
+    setButtonLoading(
+        registerButton,
+        true,
+        "Registering..."
+    );
 
-{
-method:"POST",
+    try {
+        const response =
+            await fetch(
 
-headers:{
-"Content-Type":
-"application/json"
-},
+            `${API_BASE}/doctors/register`,
 
-body:JSON.stringify({
+            {
+                method:"POST",
+
+                headers:{
+                    "Content-Type":
+                        "application/json"
+                },
+
+                body:JSON.stringify({
 
 name:
 document.getElementById(
@@ -98,26 +133,36 @@ document.getElementById(
 );
 
 const data =
-await response.json();
+            await response.json();
 
-alert(
-data.message
-);
+        if (!response.ok) {
+            alert(
+                data.message ||
+                "Registration failed."
+            );
+            return;
+        }
 
-if(response.ok){
+        localStorage.setItem(
+            "doctorEmail",
+            document.getElementById(
+                "email"
+            ).value
+        );
 
-localStorage.setItem(
-"doctorEmail",
-document.getElementById(
-"email"
-).value
-);
-
-window.location.href =
-"otp.html";
-
-}
-
+        window.location.href =
+            "otp.html";
+    } catch (error) {
+        alert(
+            "Registration failed. Please try again."
+        );
+    } finally {
+        setButtonLoading(
+            registerButton,
+            false,
+            "Register"
+        );
+    }
 }
 
 );
@@ -304,13 +349,16 @@ alert(
 
 }
 
-    if (data.profilePhoto) {
+    const doctorPhotoElement = document.getElementById(
+        "doctorPhoto"
+    );
 
-        document.getElementById(
-            "doctorPhoto"
-        ).src =
-        `http://localhost:5000/${data.profilePhoto}`;
-
+    if (doctorPhotoElement) {
+        setImageSrc(
+            doctorPhotoElement,
+            data.profilePhoto,
+            DEFAULT_DOCTOR_PHOTO
+        );
     }
 
     document.getElementById(
@@ -627,37 +675,81 @@ if (!email) {
   return;
 }
 
-const response =
-await fetch(
+const originalText =
+        sendOtpBtn.innerText;
 
-`${API_BASE}/otp/send`,
+      setButtonLoading(
+        sendOtpBtn,
+        true,
+        "Sending OTP..."
+      );
 
-{
-method:"POST",
+      try {
+        const response =
+          await fetch(
 
-headers:{
-"Content-Type":
-"application/json"
-},
+            `${API_BASE}/otp/send`,
 
-body:JSON.stringify({
-email
-})
+            {
+              method:"POST",
 
-}
+              headers:{
+                "Content-Type":
+                  "application/json"
+              },
 
-);
+              body:JSON.stringify({
+                email
+              })
 
-const data =
-await response.json();
+            }
 
-alert(
-data.message
-);
+          );
 
-}
+        const data =
+          await response.json();
 
-);
+        if (!response.ok) {
+          alert(
+            data.message ||
+              "OTP send failed."
+          );
+          return;
+        }
+
+        localStorage.setItem(
+          "doctorEmail",
+          email
+        );
+
+        sendOtpBtn.innerText =
+          "OTP Sent";
+        setTimeout(() => {
+          setButtonLoading(
+            sendOtpBtn,
+            false,
+            originalText
+          );
+        }, 1500);
+      } catch (error) {
+        alert(
+          "Unable to send OTP. Please try again."
+        );
+      } finally {
+        if (
+          sendOtpBtn.disabled
+        ) {
+          setButtonLoading(
+            sendOtpBtn,
+            false,
+            originalText
+          );
+        }
+      }
+
+    }
+
+  );
 
 }
 /* ==========================
@@ -689,42 +781,61 @@ if(verifyOtpBtn){
         return;
       }
 
-      const response =
-        await fetch(
+            const otpValue =
+        document.getElementById(
+          "otp"
+        ).value.trim();
 
-          `${API_BASE}/otp/verify`,
-
-          {
-            method:"POST",
-
-            headers:{
-              "Content-Type":
-                "application/json"
-            },
-
-            body:JSON.stringify({
-
-              email,
-
-              otp:
-                document.getElementById(
-                  "otp"
-                ).value
-
-            })
-
-          }
-
+      if (!otpValue) {
+        alert(
+          "Please enter the OTP."
         );
+        return;
+      }
 
-      const data =
-        await response.json();
-
-      alert(
-data.message
+      setButtonLoading(
+        verifyOtpBtn,
+        true,
+        "Verifying..."
       );
 
-      if(response.ok){
+      try {
+        const response =
+          await fetch(
+
+            `${API_BASE}/otp/verify`,
+
+            {
+              method:"POST",
+
+              headers:{
+                "Content-Type":
+                  "application/json"
+              },
+
+              body:JSON.stringify({
+
+                email,
+
+                otp: otpValue
+
+              })
+
+            }
+
+          );
+
+        const data =
+          await response.json();
+
+        if (!response.ok) {
+          alert(
+            data.message ||
+              "Invalid OTP."
+          );
+          return;
+        }
+
         localStorage.setItem(
           "token",
           data.token
@@ -737,7 +848,16 @@ data.message
 
         window.location.href =
           "documents.html";
-
+      } catch (error) {
+        alert(
+          "OTP verification failed. Please try again."
+        );
+      } finally {
+        setButtonLoading(
+          verifyOtpBtn,
+          false,
+          "Verify OTP"
+        );
       }
 
     }
@@ -820,41 +940,55 @@ degreeDocument
 
 }
 
-const response =
-await fetch(
+setButtonLoading(
+        uploadDoctorDocumentsBtn,
+        true,
+        "Uploading..."
+      );
 
-`${API_BASE}/documents/upload`,
+      try {
+        const response =
+          await fetch(
 
-{
-method:"POST",
+            `${API_BASE}/documents/upload`,
 
-headers:{
-Authorization:
-`Bearer ${token}`
-},
+            {
+              method:"POST",
 
-body:formData
-}
+              headers:{
+                Authorization:
+                  `Bearer ${token}`
+              },
 
-);
+              body:formData
+            }
 
-const data =
-await response.json();
+          );
 
-alert(
-data.message
-);
+        const data =
+          await response.json();
 
-if(response.ok){
+        if (!response.ok) {
+          alert(
+            data.message ||
+              "Upload failed."
+          );
+          return;
+        }
 
-alert(
-"Documents Submitted Successfully. Wait for Admin Approval."
-);
-
-window.location.href =
-"login.html";
-
-}
+        window.location.href =
+          "login.html";
+      } catch (error) {
+        alert(
+          "Upload failed. Please try again."
+        );
+      } finally {
+        setButtonLoading(
+          uploadDoctorDocumentsBtn,
+          false,
+          "Upload Documents"
+        );
+      }
 
 }
 
