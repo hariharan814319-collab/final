@@ -37,7 +37,7 @@ if (adminLoginForm) {
             showAlert("Login successful!", "success");
             setTimeout(() => {
                 window.location.href = "dashboard.html";
-            }, 1000);
+            }, 300);
         } catch (error) {
             showAlert(error.message || "Login failed", "error");
         } finally {
@@ -54,6 +54,12 @@ async function loadAdminStats() {
     const totalDoctorsEl = document.getElementById("totalDoctors");
     if (!totalDoctorsEl) return;
 
+    totalDoctorsEl.innerHTML = `<span class="skeleton skeleton-text" style="width: 70px;"></span>`;
+    document.getElementById("totalPatients").innerHTML = `<span class="skeleton skeleton-text" style="width: 70px;"></span>`;
+    document.getElementById("totalAppointments").innerHTML = `<span class="skeleton skeleton-text" style="width: 70px;"></span>`;
+    document.getElementById("pendingDoctors").innerHTML = `<span class="skeleton skeleton-text" style="width: 70px;"></span>`;
+    document.getElementById("approvedDoctors").innerHTML = `<span class="skeleton skeleton-text" style="width: 70px;"></span>`;
+
     try {
         const data = await apiCall("/admin/stats", { method: "GET" });
 
@@ -64,6 +70,7 @@ async function loadAdminStats() {
         document.getElementById("approvedDoctors").innerText = data.approvedDoctors || 0;
     } catch (error) {
         console.error("Failed to load stats:", error);
+        document.getElementById("totalDoctors").innerHTML = "<span style='color:red;'>Error</span>";
     }
 }
 
@@ -76,6 +83,25 @@ let allDoctors = [];
 async function loadDoctorsAdmin() {
     const doctorList = document.getElementById("doctorList");
     if (!doctorList) return;
+
+    doctorList.innerHTML = `
+        <div class="appointment-item">
+            <div class="skeleton skeleton-circle"></div>
+            <div style="flex:1; padding-left: 14px;">
+                <div class="skeleton skeleton-text" style="width: 180px;"></div>
+                <div class="skeleton skeleton-text" style="width: 140px;"></div>
+                <div class="skeleton skeleton-text" style="width: 120px;"></div>
+            </div>
+        </div>
+        <div class="appointment-item">
+            <div class="skeleton skeleton-circle"></div>
+            <div style="flex:1; padding-left: 14px;">
+                <div class="skeleton skeleton-text" style="width: 160px;"></div>
+                <div class="skeleton skeleton-text" style="width: 130px;"></div>
+                <div class="skeleton skeleton-text" style="width: 110px;"></div>
+            </div>
+        </div>
+    `;
 
     try {
         const doctors = await apiCall("/doctors", { method: "GET" });
@@ -280,6 +306,34 @@ if (adminLogoutBtn) {
             window.location.href = "../index.html";
         }
     });
+}
+
+/* ==========================
+   ADMIN LOGIN SKELETON
+========================== */
+
+function revealWithFade(element) {
+    if (!element) return;
+    element.style.display = "block";
+    element.classList.add('fade-in');
+    requestAnimationFrame(() => {
+        element.classList.add('visible');
+    });
+}
+
+function initAdminLoginSkeleton() {
+    const loginSkeleton = document.getElementById("adminLoginSkeleton");
+    const loginForm = document.getElementById("adminLoginForm");
+    if (loginSkeleton && loginForm) {
+        loginSkeleton.remove();
+        revealWithFade(loginForm);
+    }
+}
+
+if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initAdminLoginSkeleton);
+} else {
+    initAdminLoginSkeleton();
 }
 
 /* ==========================

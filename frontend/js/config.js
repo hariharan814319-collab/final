@@ -119,7 +119,7 @@ function showAlert(message, type = "info") {
         max-width: 400px;
     `;
     document.body.appendChild(alertEl);
-    setTimeout(() => alertEl.remove(), 3000);
+    setTimeout(() => alertEl.remove(), 1800);
 }
 
 function showLoader() {

@@ -39,7 +39,7 @@ if (registerForm) {
             showAlert("Registration successful! Please login.", "success");
             setTimeout(() => {
                 window.location.href = "login.html";
-            }, 1500);
+            }, 300);
         } catch (error) {
             showAlert(error.message || "Registration failed. Please try again.", "error");
         } finally {
@@ -85,7 +85,7 @@ if (loginForm) {
             showAlert("Login successful!", "success");
             setTimeout(() => {
                 window.location.href = "dashboard.html";
-            }, 1000);
+            }, 300);
         } catch (error) {
             showAlert(error.message || "Login failed. Please try again.", "error");
         } finally {
@@ -102,12 +102,19 @@ async function loadPatientProfile() {
     const patientNameEl = document.getElementById("patientName");
     if (!patientNameEl) return;
 
+    const patientEmailEl = document.getElementById("patientEmail");
+    const totalAppointmentsEl = document.getElementById("totalAppointments");
+
+    patientNameEl.innerHTML = `<span class="skeleton skeleton-text" style="width: 180px;"></span>`;
+    if (patientEmailEl) patientEmailEl.innerHTML = `<span class="skeleton skeleton-text" style="width: 200px;"></span>`;
+    if (totalAppointmentsEl) totalAppointmentsEl.innerHTML = `<span class="skeleton skeleton-text" style="width: 80px;"></span>`;
+
     try {
         const data = await apiCall("/profile/patient", { method: "GET" });
 
-        document.getElementById("patientName").innerText = data.name || "N/A";
-        document.getElementById("patientEmail").innerText = data.email || "N/A";
-        document.getElementById("totalAppointments").innerText = data.totalAppointments || 0;
+        patientNameEl.innerText = data.name || "N/A";
+        patientEmailEl.innerText = data.email || "N/A";
+        totalAppointmentsEl.innerText = data.totalAppointments || 0;
 
         const patientPhotoElement = document.getElementById("patientPhoto");
         if (patientPhotoElement) {
@@ -126,6 +133,8 @@ async function loadPatientProfile() {
 async function loadDoctors() {
     const doctorSelect = document.getElementById("doctorSelect");
     if (!doctorSelect) return;
+
+    doctorSelect.innerHTML = '<option value="">Loading doctors...</option>';
 
     try {
         const doctors = await apiCall("/doctors", { method: "GET" });
@@ -154,6 +163,25 @@ async function loadDoctors() {
 async function loadAppointments() {
     const appointmentsList = document.getElementById("appointmentsList");
     if (!appointmentsList) return;
+
+    appointmentsList.innerHTML = `
+        <div class="appointment-item">
+            <div class="skeleton skeleton-circle"></div>
+            <div style="flex:1">
+                <div class="skeleton skeleton-text" style="width: 140px;"></div>
+                <div class="skeleton skeleton-text" style="width: 180px;"></div>
+                <div class="skeleton skeleton-text" style="width: 120px;"></div>
+            </div>
+        </div>
+        <div class="appointment-item">
+            <div class="skeleton skeleton-circle"></div>
+            <div style="flex:1">
+                <div class="skeleton skeleton-text" style="width: 140px;"></div>
+                <div class="skeleton skeleton-text" style="width: 180px;"></div>
+                <div class="skeleton skeleton-text" style="width: 120px;"></div>
+            </div>
+        </div>
+    `;
 
     try {
         const appointments = await apiCall("/appointments", { method: "GET" });
@@ -184,7 +212,7 @@ async function loadAppointments() {
                 <div class="appointment-item">
                     <img src="${doctorPhoto}" class="doctor-small-photo" onerror="this.src='../assets/default-doctor.png'">
                     <div style="flex: 1;">
-                        <p><strong>Doctor:</strong> ${appointment.doctorId?.doctorName || "Unknown"}</p>
+                        <p><strong>Doctor:</strong> <span class="doctor-name">${appointment.doctorId?.doctorName || "Unknown"}</span></p>
                         <p><strong>Date:</strong> ${appointment.appointmentDate}</p>
                         <p><strong>Time:</strong> ${appointment.appointmentTime}</p>
                         <p><strong class="${statusClass}">Status: ${appointment.status}</strong></p>
@@ -224,7 +252,7 @@ if (bookBtn) {
             return;
         }
 
-        setButtonLoading(bookBtn, true, "Booking appointment...");
+        setButtonLoading(bookBtn, true, "Booking...");
 
         try {
             const currentUser = JSON.parse(localStorage.getItem("user") || "{}");
@@ -238,7 +266,7 @@ if (bookBtn) {
                 })
             });
 
-            showAlert("Appointment booked successfully!", "success");
+            showAlert("Appointment booked!", "success");
             doctorSelect.value = "";
             appointmentDate.value = "";
             appointmentTime.value = "";
@@ -293,14 +321,20 @@ if (uploadDocumentsBtn) {
             return;
         }
 
-        if (profilePhoto && !validateFileSize(profilePhoto)) {
-            showAlert("Profile photo must be less than 5MB", "warning");
-            return;
+        if (profilePhoto) {
+            const imageTypes = ["image/jpeg","image/png","image/webp"];
+            if (!validateFileSize(profilePhoto) || !validateFileType(profilePhoto, imageTypes)) {
+                showAlert("Profile photo must be an image and less than 5MB", "warning");
+                return;
+            }
         }
 
-        if (aadhaarDocument && !validateFileSize(aadhaarDocument)) {
-            showAlert("Aadhaar document must be less than 5MB", "warning");
-            return;
+        if (aadhaarDocument) {
+            const docTypes = ["image/jpeg","image/png","image/webp","application/pdf"];
+            if (!validateFileSize(aadhaarDocument) || !validateFileType(aadhaarDocument, docTypes)) {
+                showAlert("Aadhaar must be image/pdf and less than 5MB", "warning");
+                return;
+            }
         }
 
         const formData = new FormData();
@@ -313,7 +347,7 @@ if (uploadDocumentsBtn) {
             const response = await fetch(`${API_BASE}/patient-documents/upload`, {
                 method: "POST",
                 headers: {
-                    Authorization: `Bearer ${token}`
+                    Authorization: `Bearer ${getToken()}`
                 },
                 body: formData
             });

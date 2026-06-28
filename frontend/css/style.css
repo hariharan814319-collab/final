@@ -897,6 +897,26 @@ body {
         0 0 20px rgba(77,125,255,.3);
 }
 
+/* Ensure select/options and inputs remain readable on dark theme */
+select.glass-input, .glass-input select {
+    color: white;
+    background: rgba(255,255,255,0.03);
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+select.glass-input option {
+    background: rgba(15,23,42,0.95);
+    color: white;
+}
+
+/* Make doctor names and badges use themed background instead of white */
+.appointment-item .doctor-name {
+    background: linear-gradient(90deg,var(--phoenix-blue),var(--phoenix-green));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
 /* =======================================================
    DASHBOARD CARD FOUNDATION
 ======================================================= */
@@ -1478,6 +1498,68 @@ html{
     margin-bottom: 15px;
     font-weight: 600;
     animation: slideInAlert 0.3s ease;
+}
+
+/* =======================================================
+   SKELETON LOADING
+======================================================= */
+
+.skeleton {
+    position: relative;
+    overflow: hidden;
+    background: rgba(255,255,255,0.08);
+    border-radius: 10px;
+}
+
+.skeleton::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -150px;
+    width: 150px;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.22), transparent);
+    animation: shimmer 1.2s infinite;
+    pointer-events: none;
+}
+
+.skeleton-text {
+    display: inline-block;
+    height: 16px;
+    width: 100%;
+    max-width: 240px;
+    margin: 6px 0;
+}
+
+.skeleton-line {
+    height: 14px;
+    width: 100%;
+    margin: 10px 0;
+}
+
+.skeleton-circle {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.fade-in {
+    opacity: 0;
+    transition: opacity 0.28s ease;
+}
+
+.fade-in.visible {
+    opacity: 1;
+}
+
+@keyframes shimmer {
+    0% {
+        transform: translateX(-150px);
+    }
+    100% {
+        transform: translateX(300px);
+    }
 }
 
 @keyframes slideInAlert {

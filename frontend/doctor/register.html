@@ -25,7 +25,7 @@ href="../css/style.css">
 
 <div class="landing-container">
 
-<div class="glass-card form-card">
+<div class="glass-card form-card skeleton">
 
 <h1 class="logo">
 PHOENIX
@@ -35,7 +35,15 @@ PHOENIX
 Doctor Registration
 </p>
 
-<form id="doctorRegisterForm">
+<div id="registerSkeleton" class="skeleton" style="padding: 28px; border-radius: 22px;">
+    <div class="skeleton skeleton-text" style="width: 150px; height: 30px; margin-bottom: 20px;"></div>
+    <div class="skeleton skeleton-text" style="width: 100%; height: 48px; margin-bottom: 14px;"></div>
+    <div class="skeleton skeleton-text" style="width: 100%; height: 48px; margin-bottom: 14px;"></div>
+    <div class="skeleton skeleton-text" style="width: 100%; height: 48px; margin-bottom: 14px;"></div>
+    <div class="skeleton skeleton-text" style="width: 100%; height: 48px; margin-top: 16px;"></div>
+</div>
+
+<form id="doctorRegisterForm" style="display:none;">
 
 <input
 type="text"

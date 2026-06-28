@@ -46,7 +46,7 @@
             <h3>Total Doctors</h3>
 
             <h1 id="totalDoctors">
-                0
+                <span class="skeleton skeleton-text" style="width: 70px;"></span>
             </h1>
 
         </div>
@@ -56,7 +56,7 @@
             <h3>Total Patients</h3>
 
             <h1 id="totalPatients">
-                0
+                <span class="skeleton skeleton-text" style="width: 70px;"></span>
             </h1>
 
         </div>
@@ -66,7 +66,7 @@
             <h3>Total Appointments</h3>
 
             <h1 id="totalAppointments">
-                0
+                <span class="skeleton skeleton-text" style="width: 70px;"></span>
             </h1>
 
         </div>
@@ -76,7 +76,7 @@
             <h3>Pending Doctors</h3>
 
             <h1 id="pendingDoctors">
-                0
+                <span class="skeleton skeleton-text" style="width: 70px;"></span>
             </h1>
 
         </div>
@@ -86,7 +86,7 @@
             <h3>Approved Doctors</h3>
 
             <h1 id="approvedDoctors">
-                0
+                <span class="skeleton skeleton-text" style="width: 70px;"></span>
             </h1>
 
         </div>
@@ -191,7 +191,22 @@
         <br><br>
 
         <div id="doctorList">
-            Loading doctors...
+            <div class="appointment-item">
+                <div class="skeleton skeleton-circle"></div>
+                <div style="flex:1; padding-left: 14px;">
+                    <div class="skeleton skeleton-text" style="width: 180px;"></div>
+                    <div class="skeleton skeleton-text" style="width: 140px;"></div>
+                    <div class="skeleton skeleton-text" style="width: 120px;"></div>
+                </div>
+            </div>
+            <div class="appointment-item">
+                <div class="skeleton skeleton-circle"></div>
+                <div style="flex:1; padding-left: 14px;">
+                    <div class="skeleton skeleton-text" style="width: 160px;"></div>
+                    <div class="skeleton skeleton-text" style="width: 130px;"></div>
+                    <div class="skeleton skeleton-text" style="width: 110px;"></div>
+                </div>
+            </div>
         </div>
 
     </div>

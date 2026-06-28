@@ -67,7 +67,7 @@ if (doctorRegisterForm) {
       // Backend should send OTP; store email and redirect to OTP page
       localStorage.setItem("doctorEmail", email);
       showAlert("Registration submitted. OTP sent to your email.", "success");
-      setTimeout(() => window.location.href = "otp.html", 1000);
+      setTimeout(() => window.location.href = "otp.html", 300);
     } catch (err) {
       showAlert(err.message || "Registration failed", "error");
     } finally {
@@ -115,7 +115,7 @@ if (verifyOtpBtn) {
       if (data.token) setAuthData(data.token, data.user);
       localStorage.setItem("doctorEmail", email);
       showAlert("OTP verified. Proceed to upload documents.", "success");
-      setTimeout(() => window.location.href = "documents.html", 800);
+      setTimeout(() => window.location.href = "documents.html", 300);
     } catch (err) {
       showAlert(err.message || "OTP verification failed", "error");
     } finally {
@@ -176,7 +176,7 @@ if (uploadDoctorDocumentsBtn) {
       showAlert("Documents uploaded successfully.", "success");
       // After documents uploaded, redirect to login page
       localStorage.removeItem("doctorEmail");
-      setTimeout(() => window.location.href = "login.html", 900);
+      setTimeout(() => window.location.href = "login.html", 300);
     } catch (err) {
       showAlert(err.message || "Document upload failed", "error");
     } finally {
@@ -200,7 +200,7 @@ if (doctorLoginForm) {
       const data = await apiCall("/auth/login", { method: "POST", body: JSON.stringify({ email, password }) });
       setAuthData(data.token, data.user);
       showAlert("Login successful", "success");
-      setTimeout(() => window.location.href = "dashboard.html", 600);
+      setTimeout(() => window.location.href = "dashboard.html", 300);
     } catch (err) {
       showAlert(err.message || "Login failed", "error");
     } finally {
@@ -213,15 +213,26 @@ if (doctorLoginForm) {
 async function loadDoctorProfile() {
   const photoEl = document.getElementById("doctorPhoto");
   if (!photoEl) return;
+
+  const doctorNameEl = document.getElementById("doctorName");
+  const doctorEmailEl = document.getElementById("doctorEmail");
+  const doctorHospitalEl = document.getElementById("doctorHospital");
+  const verificationStatusEl = document.getElementById("verificationStatus");
+
+  doctorNameEl.innerHTML = `<span class="skeleton skeleton-text" style="width: 180px;"></span>`;
+  doctorEmailEl.innerHTML = `<span class="skeleton skeleton-text" style="width: 220px;"></span>`;
+  doctorHospitalEl.innerHTML = `<span class="skeleton skeleton-text" style="width: 200px;"></span>`;
+  verificationStatusEl.innerHTML = `<span class="skeleton skeleton-text" style="width: 120px;"></span>`;
+  photoEl.src = "../assets/default-doctor.png";
+
   try {
     const data = await apiCall("/profile/doctor", { method: "GET" });
-    document.getElementById("doctorName").innerText = data.doctorName || "N/A";
-    document.getElementById("doctorEmail").innerText = data.userId?.email || "N/A";
-    document.getElementById("doctorHospital").innerText = data.hospitalName || "N/A";
-    const statusEl = document.getElementById("verificationStatus");
-    if (statusEl) {
-      statusEl.innerText = data.verificationStatus || "Pending";
-      statusEl.className = `${(data.verificationStatus || "").toLowerCase()}-status`;
+    doctorNameEl.innerText = data.doctorName || "N/A";
+    doctorEmailEl.innerText = data.userId?.email || "N/A";
+    doctorHospitalEl.innerText = data.hospitalName || "N/A";
+    if (verificationStatusEl) {
+      verificationStatusEl.innerText = data.verificationStatus || "Pending";
+      verificationStatusEl.className = `${(data.verificationStatus || "").toLowerCase()}-status`;
     }
     setImageSrc(photoEl, data.profilePhoto, DEFAULT_DOCTOR_PHOTO);
     document.getElementById("consultationFee").value = data.consultationFee || "";
@@ -236,6 +247,26 @@ async function loadDoctorProfile() {
 async function loadDoctorAppointments() {
   const container = document.getElementById("doctorAppointments");
   if (!container) return;
+
+  container.innerHTML = `
+    <div class="appointment-item">
+      <div class="skeleton skeleton-circle"></div>
+      <div style="flex:1">
+        <div class="skeleton skeleton-text" style="width: 120px;"></div>
+        <div class="skeleton skeleton-text" style="width: 180px;"></div>
+        <div class="skeleton skeleton-text" style="width: 140px;"></div>
+      </div>
+    </div>
+    <div class="appointment-item">
+      <div class="skeleton skeleton-circle"></div>
+      <div style="flex:1">
+        <div class="skeleton skeleton-text" style="width: 120px;"></div>
+        <div class="skeleton skeleton-text" style="width: 180px;"></div>
+        <div class="skeleton skeleton-text" style="width: 140px;"></div>
+      </div>
+    </div>
+  `;
+
   try {
     const res = await apiCall("/doctor/appointments", { method: "GET" });
     const appointments = Array.isArray(res) ? res : res.appointments || [];
@@ -322,5 +353,36 @@ if (doctorLogoutBtn) {
 // Auto-load when on dashboard
 if (document.getElementById('doctorPhoto')) {
   loadDoctorProfile(); loadDoctorAppointments(); setInterval(loadDoctorAppointments, 30000);
+}
+
+function revealWithFade(element) {
+  if (!element) return;
+  element.style.display = 'block';
+  element.classList.add('fade-in');
+  requestAnimationFrame(() => {
+    element.classList.add('visible');
+  });
+}
+
+function initDoctorAuthSkeletons() {
+  const loginSkeleton = document.getElementById('loginSkeleton');
+  const loginForm = document.getElementById('doctorLoginForm');
+  if (loginSkeleton && loginForm) {
+    loginSkeleton.remove();
+    revealWithFade(loginForm);
+  }
+
+  const registerSkeleton = document.getElementById('registerSkeleton');
+  const registerForm = document.getElementById('doctorRegisterForm');
+  if (registerSkeleton && registerForm) {
+    registerSkeleton.remove();
+    revealWithFade(registerForm);
+  }
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initDoctorAuthSkeletons);
+} else {
+  initDoctorAuthSkeletons();
 }
 
