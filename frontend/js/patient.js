@@ -35,6 +35,7 @@ if (registerForm) {
                 body: JSON.stringify({ name, email, password, role: "patient" })
             });
 
+            console.log('Register response:', data);
             showAlert("Registration successful! Please login.", "success");
             setTimeout(() => {
                 window.location.href = "login.html";
@@ -78,7 +79,8 @@ if (loginForm) {
                 method: "POST",
                 body: JSON.stringify({ email, password })
             });
-
+            console.log('Login response:', data);
+            if (!data.token) throw new Error(data.message || 'No token received');
             setAuthData(data.token, data.user);
             showAlert("Login successful!", "success");
             setTimeout(() => {

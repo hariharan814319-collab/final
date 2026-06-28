@@ -1,14 +1,14 @@
 const API_BASE = "https://phoenix-backend-t9y4.onrender.com/api";
-const token = localStorage.getItem("token");
+function getToken() { return localStorage.getItem("token"); }
 const API_ORIGIN = API_BASE.replace("/api", "");
 const DEFAULT_USER_PHOTO = "../assets/default-user.png";
 const DEFAULT_DOCTOR_PHOTO = "../assets/default-doctor.png";
-const user = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : null;
-const userRole = user?.role || null;
+function getUser() { return localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : null; }
+function getUserRole() { const u = getUser(); return u?.role || null; }
 
 // ===== AUTH GUARDS =====
 function requireAuth() {
-    if (!token || !user) {
+    if (!getToken() || !getUser()) {
         alert("Please login first");
         window.location.href = window.location.pathname.includes("/doctor/") 
             ? "../doctor/login.html"
@@ -21,7 +21,7 @@ function requireAuth() {
 }
 
 function requireRole(role) {
-    if (userRole !== role) {
+    if (getUserRole() !== role) {
         alert("Unauthorized access");
         window.location.href = "../index.html";
         return false;
@@ -154,6 +154,7 @@ async function apiCall(endpoint, options = {}) {
         }
     };
 
+    const token = getToken();
     if (token) {
         defaultOptions.headers.Authorization = `Bearer ${token}`;
     }

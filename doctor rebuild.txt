@@ -1,0 +1,899 @@
+# MASTER PROMPT — Rebuild Doctor Registration & Login Module
+
+## Project
+
+PHOENIX Hospital Management System (MERN Stack)
+
+---
+
+# OBJECTIVE
+
+Rebuild the entire Doctor Registration and Login workflow from scratch.
+
+The backend APIs already exist and work correctly.
+
+The goal is to rebuild the frontend and ensure perfect integration with the backend.
+
+Every page must communicate correctly with backend APIs.
+
+Every button must perform its intended action.
+
+Every redirect must happen correctly.
+
+Every uploaded document must be stored correctly.
+
+Every status must update correctly.
+
+No functionality should be skipped.
+
+The workflow must be production-ready.
+
+---
+
+# COMPLETE DOCTOR APP FLOW
+
+Landing Page
+
+↓
+
+Doctor Register
+
+↓
+
+Doctor Registration API
+
+↓
+
+Doctor OTP Verification
+
+↓
+
+Doctor Upload Documents
+
+↓
+
+Doctor Login
+
+↓
+
+Doctor Dashboard
+
+↓
+
+Pending Approval
+
+↓
+
+Admin Approves Doctor
+
+↓
+
+Dashboard Status Changes to Approved
+
+↓
+
+Doctor appears in Patient Doctor List
+
+↓
+
+Patients can book appointments
+
+↓
+
+Doctor receives appointments
+
+↓
+
+Doctor manages appointments
+
+---
+
+# NUMBER OF PAGES
+
+Doctor module contains exactly FIVE pages.
+
+1. Register Page
+
+2. OTP Verification Page
+
+3. Document Upload Page
+
+4. Login Page
+
+5. Doctor Dashboard
+
+Each page has its own responsibility.
+
+No page should perform another page's work.
+
+---
+
+# PAGE 1
+
+## Doctor Register
+
+Purpose
+
+Collect doctor's personal and professional information.
+
+---
+
+Fields
+
+Name
+
+Email
+
+Password
+
+Doctor Name
+
+Specialization
+
+Experience
+
+Consultation Fee
+
+Hospital Name
+
+Medical License Number
+
+Aadhaar Number
+
+Available Days
+
+Available Time
+
+---
+
+Register Button
+
+When clicked
+
+Validate every field.
+
+If validation fails
+
+Show field errors.
+
+Do NOT call backend.
+
+If validation passes
+
+Call
+
+POST
+
+/api/auth/register-doctor
+
+Backend stores
+
+User Collection
+
+Doctor Collection
+
+Password
+
+Hash password
+
+Doctor Verification Status
+
+Pending
+
+Email Verified
+
+False
+
+Generate OTP
+
+Store OTP in OTP collection
+
+Send OTP email
+
+Backend returns
+
+Doctor Registration Submitted
+
+OTP Sent Successfully
+
+Frontend then
+
+Store email temporarily
+
+Redirect
+
+Doctor OTP Page
+
+Never go directly to Login Page.
+
+Never go directly to Dashboard.
+
+---
+
+# PAGE 2
+
+Doctor OTP Verification
+
+Purpose
+
+Verify doctor email.
+
+---
+
+Fields
+
+OTP
+
+Buttons
+
+Verify OTP
+
+Resend OTP
+
+---
+
+Verify OTP
+
+Call
+
+POST
+
+/api/otp/verify
+
+If OTP incorrect
+
+Show
+
+Invalid OTP
+
+Stay on same page.
+
+If OTP expired
+
+Show
+
+OTP Expired
+
+Allow resend.
+
+If OTP correct
+
+Backend
+
+Email Verified
+
+True
+
+Delete OTP
+
+Frontend
+
+Redirect
+
+Upload Documents Page
+
+---
+
+Resend OTP Button
+
+Call
+
+POST
+
+/api/otp/send
+
+Backend
+
+Generate new OTP
+
+Delete old OTP
+
+Store new OTP
+
+Send Email
+
+Frontend
+
+Show
+
+OTP Sent Again
+
+Stay on page.
+
+---
+
+# PAGE 3
+
+Doctor Upload Documents
+
+Purpose
+
+Collect verification documents.
+
+Required Uploads
+
+1
+
+Profile Photo
+
+2
+
+Aadhaar Document
+
+3
+
+Medical License
+
+4
+
+Degree Certificate
+
+All uploads mandatory.
+
+Upload Button
+
+When clicked
+
+Frontend validates
+
+All four files selected.
+
+If missing
+
+Show error.
+
+If valid
+
+Call
+
+POST
+
+/api/documents/upload
+
+Multipart Form Data
+
+Backend uploads files
+
+Cloudinary
+
+Receive URLs
+
+Store URLs inside Doctor document
+
+Fields
+
+profilePhoto
+
+aadhaarDocument
+
+licenseDocument
+
+degreeDocument
+
+Backend returns
+
+Documents Uploaded Successfully
+
+Frontend
+
+Redirect
+
+Doctor Login Page
+
+---
+
+# PAGE 4
+
+Doctor Login
+
+Purpose
+
+Authenticate doctor.
+
+Fields
+
+Email
+
+Password
+
+Login Button
+
+Call
+
+POST
+
+/ api/auth/login
+
+Backend
+
+Find User
+
+Compare Password
+
+Generate JWT
+
+Return
+
+Token
+
+Role
+
+Doctor
+
+Doctor Information
+
+Frontend
+
+Store JWT
+
+Store Doctor Info
+
+Redirect
+
+Doctor Dashboard
+
+---
+
+# PAGE 5
+
+Doctor Dashboard
+
+Immediately after loading
+
+Call
+
+GET
+
+/api/profile/doctor
+
+Authorization
+
+Bearer Token
+
+Backend returns
+
+Doctor Information
+
+Verification Status
+
+Profile Photo
+
+Hospital
+
+Specialization
+
+Experience
+
+Availability
+
+Documents
+
+---
+
+Dashboard Layout
+
+Top Banner
+
+Verification Status
+
+If Pending
+
+Yellow Badge
+
+Pending Admin Approval
+
+If Approved
+
+Green Badge
+
+Approved
+
+If Rejected
+
+Red Badge
+
+Rejected
+
+Until status becomes Approved
+
+Doctor CANNOT
+
+Receive appointments
+
+Appear in patient doctor list
+
+Be searchable
+
+Only profile is visible.
+
+---
+
+# ADMIN FLOW
+
+Admin Login
+
+↓
+
+Admin Dashboard
+
+↓
+
+Doctor Management
+
+↓
+
+View Pending Doctors
+
+↓
+
+Open Doctor Profile
+
+↓
+
+Verify Documents
+
+↓
+
+Approve Button
+
+OR
+
+Reject Button
+
+Approve Button
+
+Updates
+
+Doctor Verification Status
+
+Approved
+
+Immediately
+
+Doctor Dashboard
+
+Changes to Approved
+
+Patient Doctor Listing
+
+Doctor appears
+
+Appointment Booking
+
+Enabled
+
+Reject Button
+
+Status
+
+Rejected
+
+Doctor dashboard shows
+
+Rejected
+
+Doctor hidden from patients.
+
+---
+
+# PATIENT FLOW
+
+Patient Dashboard
+
+↓
+
+Load Doctors
+
+Backend query
+
+Only
+
+verificationStatus == Approved
+
+Pending doctors
+
+Never shown.
+
+Rejected doctors
+
+Never shown.
+
+Approved doctors
+
+Displayed
+
+With
+
+Profile Photo
+
+Doctor Name
+
+Specialization
+
+Hospital
+
+Experience
+
+Consultation Fee
+
+Available Days
+
+Available Time
+
+Book Appointment Button
+
+Enabled only for Approved Doctors.
+
+---
+
+# DATABASE FLOW
+
+Doctor Register
+
+↓
+
+User Collection
+
+↓
+
+Doctor Collection
+
+↓
+
+OTP Collection
+
+↓
+
+OTP Verification
+
+↓
+
+Doctor Updated
+
+isEmailVerified = true
+
+↓
+
+Cloudinary Upload
+
+↓
+
+Doctor Updated
+
+Document URLs
+
+↓
+
+Login
+
+↓
+
+JWT Generated
+
+↓
+
+Dashboard
+
+↓
+
+Pending Status
+
+↓
+
+Admin Approval
+
+↓
+
+Doctor Updated
+
+verificationStatus = Approved
+
+↓
+
+Patient can view Doctor
+
+↓
+
+Appointments Collection
+
+---
+
+# CLOUDINARY FLOW
+
+Upload
+
+↓
+
+Cloudinary
+
+↓
+
+Image URL
+
+↓
+
+MongoDB
+
+↓
+
+Frontend
+
+↓
+
+Render URL Directly
+
+Never use
+
+/uploads/
+
+Never use
+
+localhost URLs
+
+Always use Cloudinary URL.
+
+---
+
+# BUTTON ACTIONS
+
+Register Button
+
+Validate
+
+↓
+
+Register API
+
+↓
+
+Redirect OTP
+
+Verify OTP Button
+
+↓
+
+Verify API
+
+↓
+
+Redirect Upload
+
+Resend OTP
+
+↓
+
+Send OTP API
+
+↓
+
+Stay
+
+Upload Button
+
+↓
+
+Upload API
+
+↓
+
+Redirect Login
+
+Login Button
+
+↓
+
+Login API
+
+↓
+
+Dashboard
+
+Logout Button
+
+↓
+
+Remove Token
+
+↓
+
+Redirect Login
+
+---
+
+# LOCAL STORAGE
+
+Store
+
+JWT
+
+Doctor Name
+
+Doctor ID
+
+Role
+
+Profile Photo URL
+
+Clear everything
+
+On Logout.
+
+---
+
+# ERROR HANDLING
+
+Already Registered
+
+Email Exists
+
+Wrong Password
+
+Invalid OTP
+
+Expired OTP
+
+Cloudinary Upload Failed
+
+Missing Files
+
+Network Error
+
+Server Error
+
+Unauthorized
+
+Token Expired
+
+Each must display proper UI message.
+
+No silent failures.
+
+---
+
+# SECURITY
+
+Passwords hashed.
+
+JWT Authentication.
+
+Protected Routes.
+
+Role Middleware.
+
+Doctor cannot access Admin.
+
+Patient cannot access Doctor.
+
+No page accessible without login.
+
+---
+
+# SUCCESS CRITERIA
+
+✓ Registration stores doctor and user.
+
+✓ OTP sent successfully.
+
+✓ OTP verifies correctly.
+
+✓ Documents upload to Cloudinary.
+
+✓ URLs stored in MongoDB.
+
+✓ Login succeeds.
+
+✓ JWT stored.
+
+✓ Dashboard loads profile.
+
+✓ Pending status shown.
+
+✓ Admin approval changes status.
+
+✓ Approved doctors appear for patients.
+
+✓ Patients can book appointments.
+
+✓ Dashboard remains fully functional.
+
+Build the module exactly according to this workflow. Do not simplify, skip, merge, or alter any page transitions or backend interactions. Every frontend action must correspond to the correct backend API and maintain the described state transitions.
