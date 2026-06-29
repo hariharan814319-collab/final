@@ -64,9 +64,8 @@ if (doctorRegisterForm) {
         })
       });
 
-      // Backend should send OTP; store email and redirect to OTP page
       localStorage.setItem("doctorEmail", email);
-      showAlert("Registration submitted. OTP sent to your email.", "success");
+      showAlert("Registration submitted. Please verify your email.", "success");
       setTimeout(() => window.location.href = "otp.html", 300);
     } catch (err) {
       showAlert(err.message || "Registration failed", "error");
@@ -83,6 +82,9 @@ const verifyOtpBtn = document.getElementById("verifyOtpBtn");
 
 if (doctorEmailField) {
   doctorEmailField.value = localStorage.getItem("doctorEmail") || "";
+  if (!doctorEmailField.value) {
+    showAlert("Please complete doctor registration first.", "warning");
+  }
 }
 
 if (sendOtpBtn) {
@@ -93,7 +95,7 @@ if (sendOtpBtn) {
     try {
       await apiCall("/otp/send", { method: "POST", body: JSON.stringify({ email }) });
       localStorage.setItem("doctorEmail", email);
-      showAlert("OTP sent again", "success");
+      showAlert("OTP sent to your email", "success");
     } catch (err) {
       showAlert(err.message || "Failed to send OTP", "error");
     } finally {
@@ -385,4 +387,3 @@ if (document.readyState === 'loading') {
 } else {
   initDoctorAuthSkeletons();
 }
-

@@ -1,8 +1,6 @@
 const User = require("../models/User");
 const Doctor = require("../models/Doctor");
-const Otp = require("../models/Otp");
 const bcrypt = require("bcryptjs");
-const sendEmail = require("../utils/sendEmail");
 
 const registerDoctor = async (req, res) => {
   try {
@@ -68,30 +66,9 @@ const registerDoctor = async (req, res) => {
 
       });
 
-    const otp = Math.floor(100000 + Math.random() * 900000).toString();
-
-    await Otp.deleteMany({ email });
-    await Otp.create({ email, otp });
-
-    try {
-      await sendEmail(
-        email,
-        "PHOENIX Email Verification",
-        `Your OTP is: ${otp}`
-      );
-    } catch (emailError) {
-      console.error(
-        "OTP email send failed:",
-        emailError.message
-      );
-      return res.status(502).json({
-        message: "Doctor registration saved, but OTP email could not be delivered."
-      });
-    }
-
     res.status(201).json({
       message:
-        "Doctor Registration Submitted. OTP sent to your email.",
+        "Doctor Registration Submitted. Please verify your email.",
       doctor
     });
 

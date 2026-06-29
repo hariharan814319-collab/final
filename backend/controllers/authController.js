@@ -7,6 +7,7 @@ const jwt = require("jsonwebtoken");
 const registerUser = async (req, res) => {
   try {
     const { name, email, password, role } = req.body;
+    const normalizedRole = role || "patient";
 
     // Check User Exists
     const userExists = await User.findOne({ email });
@@ -26,7 +27,9 @@ const registerUser = async (req, res) => {
       name,
       email,
       password: hashedPassword,
-      role,
+      role: normalizedRole,
+      profilePhoto: req.files?.profilePhoto?.[0]?.path || "",
+      aadhaarDocument: req.files?.aadhaarDocument?.[0]?.path || "",
     });
 
     res.status(201).json({
@@ -128,6 +131,7 @@ if (user.role === "doctor") {
     name: user.name,
     email: user.email,
     role: user.role,
+    profilePhoto: user.profilePhoto,
   },
 });
   } catch (error) {

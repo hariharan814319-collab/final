@@ -11,6 +11,8 @@ if (registerForm) {
         const name = document.getElementById("name").value.trim();
         const email = document.getElementById("email").value.trim();
         const password = document.getElementById("password").value;
+        const profilePhoto = document.getElementById("profilePhoto")?.files[0];
+        const aadhaarDocument = document.getElementById("aadhaarDocument")?.files[0];
         const submitBtn = registerForm.querySelector('button[type="submit"]');
 
         // Validation
@@ -26,14 +28,41 @@ if (registerForm) {
             showAlert("Password must be at least 6 characters", "warning");
             return;
         }
+        if (profilePhoto) {
+            const imageTypes = ["image/jpeg", "image/png", "image/webp"];
+            if (!validateFileSize(profilePhoto) || !validateFileType(profilePhoto, imageTypes)) {
+                showAlert("Profile photo must be an image and less than 5MB", "warning");
+                return;
+            }
+        }
+        if (aadhaarDocument) {
+            const docTypes = ["image/jpeg", "image/png", "image/webp", "application/pdf"];
+            if (!validateFileSize(aadhaarDocument) || !validateFileType(aadhaarDocument, docTypes)) {
+                showAlert("Aadhaar must be image/pdf and less than 5MB", "warning");
+                return;
+            }
+        }
+
+        const formData = new FormData();
+        formData.append("name", name);
+        formData.append("email", email);
+        formData.append("password", password);
+        formData.append("role", "patient");
+        if (profilePhoto) formData.append("profilePhoto", profilePhoto);
+        if (aadhaarDocument) formData.append("aadhaarDocument", aadhaarDocument);
 
         setButtonLoading(submitBtn, true, "Registering...");
 
         try {
-            const data = await apiCall("/auth/register", {
+            const response = await fetch(`${API_BASE}/auth/register`, {
                 method: "POST",
-                body: JSON.stringify({ name, email, password, role: "patient" })
+                body: formData
             });
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message || "Registration failed");
+            }
 
             console.log('Register response:', data);
             showAlert("Registration successful! Please login.", "success");
@@ -300,86 +329,6 @@ async function cancelAppointment(appointmentId, button) {
     } finally {
         setButtonLoading(button, false, "Cancel");
     }
-}
-
-/* ==========================
-   UPLOAD DOCUMENTS
-========================== */
-
-const uploadDocumentsBtn = document.getElementById("uploadDocumentsBtn");
-
-if (uploadDocumentsBtn) {
-    uploadDocumentsBtn.addEventListener("click", async () => {
-        const profilePhotoFile = document.getElementById("profilePhotoFile");
-        const aadhaarFile = document.getElementById("aadhaarFile");
-
-        const profilePhoto = profilePhotoFile?.files[0];
-        const aadhaarDocument = aadhaarFile?.files[0];
-
-        if (!profilePhoto && !aadhaarDocument) {
-            showAlert("Please select at least one file to upload", "warning");
-            return;
-        }
-
-        if (profilePhoto) {
-            const imageTypes = ["image/jpeg","image/png","image/webp"];
-            if (!validateFileSize(profilePhoto) || !validateFileType(profilePhoto, imageTypes)) {
-                showAlert("Profile photo must be an image and less than 5MB", "warning");
-                return;
-            }
-        }
-
-        if (aadhaarDocument) {
-            const docTypes = ["image/jpeg","image/png","image/webp","application/pdf"];
-            if (!validateFileSize(aadhaarDocument) || !validateFileType(aadhaarDocument, docTypes)) {
-                showAlert("Aadhaar must be image/pdf and less than 5MB", "warning");
-                return;
-            }
-        }
-
-        const formData = new FormData();
-        if (profilePhoto) formData.append("profilePhoto", profilePhoto);
-        if (aadhaarDocument) formData.append("aadhaarDocument", aadhaarDocument);
-
-        setButtonLoading(uploadDocumentsBtn, true, "Uploading...");
-
-        try {
-            const response = await fetch(`${API_BASE}/patient-documents/upload`, {
-                method: "POST",
-                headers: {
-                    Authorization: `Bearer ${getToken()}`
-                },
-                body: formData
-            });
-
-            const data = await response.json();
-
-            if (!response.ok) {
-                throw new Error(data.message || "Upload failed");
-            }
-
-            showAlert("Documents uploaded successfully!", "success");
-            profilePhotoFile.value = "";
-            aadhaarFile.value = "";
-
-            // Preview aadhaar
-            const aadhaarPreview = document.getElementById("aadhaarPreview");
-            if (aadhaarPreview && aadhaarDocument) {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    aadhaarPreview.src = e.target.result;
-                    aadhaarPreview.style.display = "block";
-                };
-                reader.readAsDataURL(aadhaarDocument);
-            }
-
-            await loadPatientProfile();
-        } catch (error) {
-            showAlert(error.message || "Document upload failed", "error");
-        } finally {
-            setButtonLoading(uploadDocumentsBtn, false, "Upload Documents");
-        }
-    });
 }
 
 /* ==========================
