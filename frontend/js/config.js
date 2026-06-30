@@ -1,4 +1,4 @@
-const REMOTE_API_BASE = "https://hospital-deploy-rn02.onrender.com/api";
+const REMOTE_API_BASE = "https://final-mhm1.onrender.com/api";
 const API_BASE = (function() {
     try {
         const host = window.location.hostname;
