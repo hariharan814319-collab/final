@@ -215,7 +215,7 @@
 2. Navigate to Patient/Doctor/Admin login
 3. Create account or login
 4. All features are fully functional
-5. Backend API must be running at: `https://phoenix-backend-t9y4.onrender.com/api`
+5. Backend API must be running at: `https://hospital-deploy-rn02.onrender.com/api`
 
 ### What Works:
 - ✅ Complete registration flows
