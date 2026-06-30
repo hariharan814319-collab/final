@@ -26,7 +26,7 @@ const app = express();
 const corsOptions = process.env.NODE_ENV === 'production'
   ? {
       origin: [
-        "https://visionary-chaja-262ed3.netlify.app"
+        "https://astounding-blini-c89bdf.netlify.app"
       ],
       credentials: true,
     }
