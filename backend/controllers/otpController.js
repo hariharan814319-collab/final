@@ -16,8 +16,18 @@ const sendOtp = async (req, res) => {
   try {
 
     const { email } = req.body;
-    if (!email) {
-      return res.status(400).json({ message: "Email is required" });
+
+    const user =
+      await User.findOne({
+        email
+      });
+
+    if (!user) {
+
+      return res.status(404).json({
+        message: "User Not Found"
+      });
+
     }
 
     const otp =
@@ -114,25 +124,24 @@ const verifyOtp = async (req, res) => {
 
       );
 
-    // If a Doctor record is not found, continue — the doctor profile
-    // may be created separately during registration flow. Do not fail
-    // verification because of a missing doctor document.
     if (!doctor) {
-      console.warn(`Doctor profile not found for user ${user._id} during OTP verification`);
+
+      return res.status(404).json({
+        message: "Doctor Profile Not Found"
+      });
+
     }
 
     await Otp.deleteMany({
       email
     });
 
-    const jwtSecret = process.env.JWT_SECRET || "hospital_secret_key";
-
     const token = jwt.sign(
       {
         id: user._id,
         role: user.role,
       },
-      jwtSecret,
+      process.env.JWT_SECRET,
       {
         expiresIn: "7d",
       }

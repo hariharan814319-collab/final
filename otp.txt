@@ -1,0 +1,1432 @@
+//otp working code in localhost
+
+otp.html
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>
+Doctor OTP Verification
+</title>
+
+<link rel="stylesheet"
+href="../css/style.css">
+
+</head>
+
+<body>
+
+<div class="landing-container">
+
+<div class="glass-card form-card">
+
+<h2>
+
+Email Verification
+
+</h2>
+
+<br>
+
+<input
+  type="email"
+  id="doctorEmail"
+  class="glass-input"
+  placeholder="Email Address"
+  readonly>
+
+<br><br>
+
+<button
+id="sendOtpBtn"
+class="btn doctor-btn">
+
+Send OTP
+
+</button>
+
+<br><br>
+
+<input
+type="text"
+id="otp"
+class="glass-input"
+placeholder="Enter OTP">
+
+<br><br>
+
+<button
+id="verifyOtpBtn"
+class="btn doctor-btn">
+
+Verify OTP
+
+</button>
+
+</div>
+
+</div>
+
+<script src="../js/config.js"></script>
+<script src="../js/doctor.js"></script>
+
+</body>
+
+</html>
+
+doctor.js
+
+/* ==========================
+   DOCTOR REGISTER
+========================== */
+
+const doctorRegisterForm =
+document.getElementById(
+"doctorRegisterForm"
+);
+
+if(doctorRegisterForm){
+
+doctorRegisterForm.addEventListener(
+"submit",
+
+async(e)=>{
+
+e.preventDefault();
+
+const response =
+await fetch(
+
+`${API_BASE}/doctors/register`,
+
+{
+method:"POST",
+
+headers:{
+"Content-Type":
+"application/json"
+},
+
+body:JSON.stringify({
+
+name:
+document.getElementById(
+"name"
+).value,
+
+email:
+document.getElementById(
+"email"
+).value,
+
+password:
+document.getElementById(
+"password"
+).value,
+
+doctorName:
+document.getElementById(
+"doctorName"
+).value,
+
+specialization:
+document.getElementById(
+"specialization"
+).value,
+
+experience:
+document.getElementById(
+"experience"
+).value,
+
+consultationFee:
+document.getElementById(
+"consultationFee"
+).value,
+
+hospitalName:
+document.getElementById(
+"hospitalName"
+).value,
+
+medicalLicenseNumber:
+document.getElementById(
+"medicalLicenseNumber"
+).value,
+
+aadhaarNumber:
+document.getElementById(
+"aadhaarNumber"
+).value,
+
+availableDays:
+document.getElementById(
+"availableDays"
+).value.split(","),
+
+availableTime:
+document.getElementById(
+"availableTime"
+).value
+
+})
+
+}
+
+);
+
+const data =
+await response.json();
+
+alert(
+data.message
+);
+
+if(response.ok){
+
+localStorage.setItem(
+"doctorEmail",
+document.getElementById(
+"email"
+).value
+);
+
+window.location.href =
+"otp.html";
+
+}
+
+}
+
+);
+
+}
+/* ==========================
+   DOCTOR LOGIN
+========================== */
+
+const doctorLoginForm =
+    document.getElementById(
+        "doctorLoginForm"
+    );
+
+if (doctorLoginForm) {
+
+    doctorLoginForm.addEventListener(
+        "submit",
+        async (e) => {
+
+            e.preventDefault();
+
+            const email =
+                document.getElementById(
+                    "doctorEmail"
+                ).value;
+
+            const password =
+                document.getElementById(
+                    "doctorPassword"
+                ).value;
+
+            const response =
+                await fetch(
+                    `${API_BASE}/auth/login`,
+                    {
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type":
+                                "application/json"
+                        },
+
+                        body: JSON.stringify({
+                            email,
+                            password
+                        })
+                    }
+                );
+
+            const data =
+                await response.json();
+
+            if (response.ok) {
+
+                localStorage.setItem(
+                    "token",
+                    data.token
+                );
+
+                localStorage.setItem(
+                    "user",
+                    JSON.stringify(
+                        data.user
+                    )
+                );
+
+                window.location.href =
+                    "dashboard.html";
+            }
+
+            else {
+
+                alert(
+                    data.message
+                );
+            }
+        }
+    );
+}
+
+/* ==========================
+   DOCTOR PROFILE
+========================== */
+
+const doctorName =
+    document.getElementById(
+        "doctorName"
+    );
+
+const doctorEmail =
+    document.getElementById(
+        "doctorEmail"
+    );
+
+async function loadDoctorProfile() {
+
+    if (!document.getElementById("doctorPhoto"))
+        return;
+
+    const response =
+        await fetch(
+            `${API_BASE}/profile/doctor`,
+            {
+                headers: {
+                    Authorization:
+                        `Bearer ${token}`
+                }
+            }
+        );
+
+    const data =
+        await response.json();
+
+    document.getElementById(
+        "doctorName"
+    ).innerText =
+        data.doctorName;
+
+    document.getElementById(
+        "doctorEmail"
+    ).innerText =
+        data.userId.email;
+
+    document.getElementById(
+        "doctorHospital"
+    ).innerText =
+        data.hospitalName;
+
+    document.getElementById(
+        "verificationStatus"
+    ).innerText =
+        data.verificationStatus;
+        const statusElement =
+document.getElementById(
+"verificationStatus"
+);
+
+if(
+data.verificationStatus ===
+"Approved"
+){
+
+statusElement.className =
+"approved-status";
+
+}
+
+if(
+data.verificationStatus ===
+"Pending"
+){
+
+statusElement.className =
+"pending-status";
+
+}
+
+if(
+data.verificationStatus ===
+"Rejected"
+){
+
+statusElement.className =
+"rejected-status";
+
+}
+        const status =
+data.verificationStatus;
+
+if(status === "Pending"){
+
+alert(
+"Your verification is pending admin approval."
+);
+
+}
+
+if(status === "Rejected"){
+
+alert(
+"Your verification has been rejected."
+);
+
+}
+
+    if (data.profilePhoto) {
+
+        document.getElementById(
+            "doctorPhoto"
+        ).src =
+        `http://localhost:5000/${data.profilePhoto}`;
+
+    }
+
+    document.getElementById(
+        "consultationFee"
+    ).value =
+        data.consultationFee;
+
+    document.getElementById(
+        "availableDays"
+    ).value =
+        data.availableDays.join(",");
+
+    document.getElementById(
+        "availableTime"
+    ).value =
+        data.availableTime;
+
+    document.getElementById(
+        "hospitalName"
+    ).value =
+        data.hospitalName;
+}
+/* ==========================
+   LOAD DOCTOR APPOINTMENTS
+========================== */
+
+const doctorAppointments =
+    document.getElementById(
+        "doctorAppointments"
+    );
+
+async function loadDoctorAppointments() {
+
+    if (!doctorAppointments) return;
+
+    const response =
+        await fetch(
+            `${API_BASE}/doctor/appointments`,
+            {
+                headers: {
+                    Authorization:
+                        `Bearer ${token}`
+                }
+            }
+        );
+
+    const dashboardData =
+        await response.json();
+
+    const appointments =
+        Array.isArray(dashboardData)
+            ? dashboardData
+            : dashboardData.appointments || [];
+
+    updateStats(
+        appointments
+    );
+
+    doctorAppointments.innerHTML = "";
+
+    appointments.forEach(
+        (appointment) => {
+
+            doctorAppointments.innerHTML +=
+                `
+                <div class="appointment-item">
+
+                    <p>
+                        Patient:
+                        ${appointment.patientId?.name || "Unknown Patient"}
+                    </p>
+
+                    <p>
+                        Email:
+                        ${appointment.patientId?.email || "Not available"}
+                    </p>
+
+                    <p>
+                        Date:
+                        ${appointment.appointmentDate}
+                    </p>
+
+                    <p>
+                        Time:
+                        ${appointment.appointmentTime}
+                    </p>
+
+                    <p>
+                        Status:
+                        ${appointment.status}
+                    </p>
+
+                    <br>
+
+                    ${
+appointment.status === "Pending"
+?
+`
+<button
+onclick="updateAppointmentStatus(
+'${appointment._id}',
+'Approved'
+)"
+class="btn doctor-btn">
+Approve
+</button>
+`
+:
+`
+<span class="approved-badge">
+Already Approved
+</span>
+`
+}
+
+                </div>
+                `;
+        }
+    );
+}
+function updateStats(
+    appointments
+) {
+
+    let pending = 0;
+
+    let approved = 0;
+
+    appointments.forEach(
+        (appointment) => {
+
+            if (
+                appointment.status ===
+                "Pending"
+            )
+                pending++;
+
+            if (
+                appointment.status ===
+                "Approved"
+            )
+                approved++;
+
+        }
+    );
+
+    const pendingEl =
+        document.getElementById(
+            "pendingCount"
+        );
+
+    const approvedEl =
+        document.getElementById(
+            "approvedCount"
+        );
+
+    if (pendingEl)
+        pendingEl.innerText =
+            pending;
+
+    if (approvedEl)
+        approvedEl.innerText =
+            approved;
+}
+
+/* ==========================
+   UPDATE STATUS
+========================== */
+
+async function updateAppointmentStatus(
+    appointmentId,
+    status
+) {
+
+    const response =
+        await fetch(
+            `${API_BASE}/doctor/appointment/${appointmentId}`,
+            {
+                method: "PUT",
+
+                headers: {
+
+                    "Content-Type":
+                        "application/json",
+
+                    Authorization:
+                        `Bearer ${token}`
+                },
+
+                body: JSON.stringify({
+                    status
+                })
+            }
+        );
+
+    const data =
+        await response.json();
+
+    alert(data.message);
+
+    loadDoctorAppointments();
+}
+const updateProfileBtn =
+document.getElementById(
+"updateProfileBtn"
+);
+
+if(updateProfileBtn){
+
+updateProfileBtn.addEventListener(
+"click",
+
+async()=>{
+
+const response =
+await fetch(
+
+`${API_BASE}/profile/doctor`,
+
+{
+method:"PUT",
+
+headers:{
+
+"Content-Type":
+"application/json",
+
+Authorization:
+`Bearer ${token}`
+},
+
+body:JSON.stringify({
+
+consultationFee:
+document.getElementById(
+"consultationFee"
+).value,
+
+availableDays:
+document.getElementById(
+"availableDays"
+).value
+.split(","),
+
+availableTime:
+document.getElementById(
+"availableTime"
+).value,
+
+hospitalName:
+document.getElementById(
+"hospitalName"
+).value
+
+})
+
+}
+
+);
+
+const data =
+await response.json();
+
+alert(
+data.message
+);
+
+loadDoctorProfile();
+
+}
+
+);
+
+}
+/* ==========================
+   SEND OTP
+========================== */
+
+const doctorEmailInput =
+document.getElementById(
+"doctorEmail"
+);
+
+if (doctorEmailInput &&
+    !doctorEmailInput.value) {
+  doctorEmailInput.value =
+    localStorage.getItem(
+      "doctorEmail"
+    ) || "";
+}
+
+const sendOtpBtn =
+document.getElementById(
+"sendOtpBtn"
+);
+
+if(sendOtpBtn){
+
+sendOtpBtn.addEventListener(
+"click",
+
+async()=>{
+
+const email =
+  doctorEmailInput?.value ||
+  localStorage.getItem(
+    "doctorEmail"
+  );
+
+if (!email) {
+  alert(
+    "Doctor email missing. Please register first."
+  );
+  return;
+}
+
+const response =
+await fetch(
+
+`${API_BASE}/otp/send`,
+
+{
+method:"POST",
+
+headers:{
+"Content-Type":
+"application/json"
+},
+
+body:JSON.stringify({
+email
+})
+
+}
+
+);
+
+const data =
+await response.json();
+
+alert(
+data.message
+);
+
+}
+
+);
+
+}
+/* ==========================
+   VERIFY OTP
+========================== */
+
+const verifyOtpBtn =
+document.getElementById(
+"verifyOtpBtn"
+);
+
+if(verifyOtpBtn){
+
+  verifyOtpBtn.addEventListener(
+    "click",
+
+    async()=>{
+
+      const email =
+        doctorEmailInput?.value ||
+        localStorage.getItem(
+          "doctorEmail"
+        );
+
+      if (!email) {
+        alert(
+          "Doctor email missing. Please register first."
+        );
+        return;
+      }
+
+      const response =
+        await fetch(
+
+          `${API_BASE}/otp/verify`,
+
+          {
+            method:"POST",
+
+            headers:{
+              "Content-Type":
+                "application/json"
+            },
+
+            body:JSON.stringify({
+
+              email,
+
+              otp:
+                document.getElementById(
+                  "otp"
+                ).value
+
+            })
+
+          }
+
+        );
+
+      const data =
+        await response.json();
+
+      alert(
+data.message
+      );
+
+      if(response.ok){
+        localStorage.setItem(
+          "token",
+          data.token
+        );
+
+        localStorage.setItem(
+          "user",
+          JSON.stringify(data.user)
+        );
+
+        window.location.href =
+          "documents.html";
+
+      }
+
+    }
+
+  );
+
+}
+/* ==========================
+   DOCTOR DOCUMENT UPLOAD
+========================== */
+
+const uploadDoctorDocumentsBtn =
+document.getElementById(
+"uploadDoctorDocumentsBtn"
+);
+
+if(uploadDoctorDocumentsBtn){
+
+uploadDoctorDocumentsBtn.addEventListener(
+"click",
+
+async()=>{
+
+const formData =
+new FormData();
+
+const profilePhoto =
+document.getElementById(
+"profilePhoto"
+).files[0];
+
+const aadhaarDocument =
+document.getElementById(
+"aadhaarDocument"
+).files[0];
+
+const licenseDocument =
+document.getElementById(
+"licenseDocument"
+).files[0];
+
+const degreeDocument =
+document.getElementById(
+"degreeDocument"
+).files[0];
+
+if(profilePhoto){
+
+formData.append(
+"profilePhoto",
+profilePhoto
+);
+
+}
+
+if(aadhaarDocument){
+
+formData.append(
+"aadhaarDocument",
+aadhaarDocument
+);
+
+}
+
+if(licenseDocument){
+
+formData.append(
+"licenseDocument",
+licenseDocument
+);
+
+}
+
+if(degreeDocument){
+
+formData.append(
+"degreeDocument",
+degreeDocument
+);
+
+}
+
+const response =
+await fetch(
+
+`${API_BASE}/documents/upload`,
+
+{
+method:"POST",
+
+headers:{
+Authorization:
+`Bearer ${token}`
+},
+
+body:formData
+}
+
+);
+
+const data =
+await response.json();
+
+alert(
+data.message
+);
+
+if(response.ok){
+
+alert(
+"Documents Submitted Successfully. Wait for Admin Approval."
+);
+
+window.location.href =
+"login.html";
+
+}
+
+}
+
+);
+
+}
+/* ==========================
+   DOCTOR LOGOUT
+========================== */
+
+const doctorLogoutBtn =
+    document.getElementById(
+        "doctorLogoutBtn"
+    );
+
+if (doctorLogoutBtn) {
+
+    doctorLogoutBtn.addEventListener(
+        "click",
+        () => {
+
+            localStorage.clear();
+
+            window.location.href =
+                "../index.html";
+        }
+    );
+}
+
+loadDoctorProfile();
+
+loadDoctorAppointments();
+
+
+otpcontroller.js
+
+const Otp =
+require("../models/Otp");
+
+const Doctor =
+require("../models/Doctor");
+const User = require("../models/User");
+const sendEmail =
+require("../utils/sendEmail");
+const jwt = require("jsonwebtoken");
+
+
+// SEND OTP
+
+const sendOtp = async (req, res) => {
+
+  try {
+
+    const { email } = req.body;
+
+    const user =
+      await User.findOne({
+        email
+      });
+
+    if (!user) {
+
+      return res.status(404).json({
+        message: "User Not Found"
+      });
+
+    }
+
+    const otp =
+      Math.floor(
+        100000 +
+        Math.random() * 900000
+      ).toString();
+
+    await Otp.deleteMany({
+      email
+    });
+
+    await Otp.create({
+      email,
+      otp
+    });
+
+    await sendEmail(
+      email,
+      "PHOENIX Email Verification",
+      `Your OTP is: ${otp}`
+    );
+
+    res.status(200).json({
+      message:
+      "OTP Sent Successfully"
+    });
+
+  }
+
+  catch (error) {
+
+    res.status(500).json({
+      message:
+      error.message
+    });
+
+  }
+
+};
+
+// VERIFY OTP
+
+const verifyOtp = async (req, res) => {
+
+  try {
+
+    const {
+      email,
+      otp
+    } = req.body;
+
+    const otpRecord =
+      await Otp.findOne({
+        email,
+        otp
+      });
+
+    if (!otpRecord) {
+
+      return res.status(400).json({
+        message: "Invalid OTP"
+      });
+
+    }
+
+    const user =
+      await User.findOne({
+        email
+      });
+
+    if (!user) {
+
+      return res.status(404).json({
+        message: "User Not Found"
+      });
+
+    }
+
+    const doctor =
+      await Doctor.findOneAndUpdate(
+
+        {
+          userId: user._id
+        },
+
+        {
+          isEmailVerified: true
+        },
+
+        {
+          new: true
+        }
+
+      );
+
+    if (!doctor) {
+
+      return res.status(404).json({
+        message: "Doctor Profile Not Found"
+      });
+
+    }
+
+    await Otp.deleteMany({
+      email
+    });
+
+    const token = jwt.sign(
+      {
+        id: user._id,
+        role: user.role,
+      },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "7d",
+      }
+    );
+
+    res.status(200).json({
+
+      message:
+        "Email Verified Successfully",
+
+      token,
+      user: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+      },
+      doctor,
+
+    });
+
+  }
+
+  catch (error) {
+
+    res.status(500).json({
+      message: error.message
+    });
+
+  }
+
+};
+
+module.exports = {
+
+    sendOtp,
+
+    verifyOtp
+
+};
+
+doctorRegistration.js
+
+const User = require("../models/User");
+const Doctor = require("../models/Doctor");
+const bcrypt = require("bcryptjs");
+
+const registerDoctor = async (req, res) => {
+  try {
+
+    const {
+      name,
+      email,
+      password,
+
+      doctorName,
+      specialization,
+      experience,
+      consultationFee,
+
+      hospitalName,
+      medicalLicenseNumber,
+      aadhaarNumber,
+
+      availableDays,
+      availableTime
+    } = req.body;
+
+    const existingUser =
+      await User.findOne({ email });
+
+    if (existingUser) {
+      return res.status(400).json({
+        message: "Email Already Exists"
+      });
+    }
+
+    const hashedPassword =
+      await bcrypt.hash(password, 10);
+
+    const user =
+      await User.create({
+        name,
+        email,
+        password: hashedPassword,
+        role: "doctor"
+      });
+
+    const doctor =
+      await Doctor.create({
+
+        userId: user._id,
+
+        doctorName,
+        specialization,
+        experience,
+        consultationFee,
+
+        hospitalName,
+        medicalLicenseNumber,
+        aadhaarNumber,
+
+        availableDays,
+        availableTime,
+
+        verificationStatus: "Pending",
+
+        isEmailVerified: false
+
+      });
+
+    res.status(201).json({
+
+      message:
+        "Doctor Registration Submitted. Waiting For Admin Approval.",
+
+      doctor
+
+    });
+
+  } catch (error) {
+
+    res.status(500).json({
+      message: error.message
+    });
+
+  }
+};
+
+module.exports = {
+  registerDoctor
+};
+
+doctorController.js
+
+const Doctor = require("../models/Doctor");
+
+// Get All Doctors
+const getDoctors = async (req, res) => {
+  try {
+    const doctors = await Doctor.find()
+      .populate("userId", "name email role");
+
+    res.status(200).json(doctors);
+
+  } catch (error) {
+
+    res.status(500).json({
+      message: error.message,
+    });
+
+  }
+};
+
+// Get Single Doctor
+const getDoctorById = async (req, res) => {
+  try {
+
+    const doctor = await Doctor.findById(req.params.id)
+      .populate("userId", "name email role");
+
+    if (!doctor) {
+      return res.status(404).json({
+        message: "Doctor Not Found",
+      });
+    }
+
+    res.status(200).json(doctor);
+
+  } catch (error) {
+
+    res.status(500).json({
+      message: error.message,
+    });
+
+  }
+};
+
+// Add Doctor
+const createDoctor = async (req, res) => {
+  try {
+
+    const {
+      userId,
+      doctorName,
+      specialization,
+      experience,
+      consultationFee,
+      availableDays,
+      availableTime,
+    } = req.body;
+
+    const doctor = await Doctor.create({
+      userId,
+      doctorName,
+      specialization,
+      experience,
+      consultationFee,
+      availableDays,
+      availableTime,
+    });
+
+    res.status(201).json({
+      message: "Doctor Added Successfully",
+      doctor,
+    });
+
+  } catch (error) {
+
+    res.status(500).json({
+      message: error.message,
+    });
+
+  }
+};
+
+// Update Doctor
+const updateDoctor = async (req, res) => {
+  try {
+
+    const doctor = await Doctor.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      {
+        new: true,
+        runValidators: true,
+      }
+    );
+
+    if (!doctor) {
+      return res.status(404).json({
+        message: "Doctor Not Found",
+      });
+    }
+
+    res.status(200).json({
+      message: "Doctor Updated Successfully",
+      doctor,
+    });
+
+  } catch (error) {
+
+    res.status(500).json({
+      message: error.message,
+    });
+
+  }
+};
+
+// Delete Doctor
+const deleteDoctor = async (req, res) => {
+  try {
+
+    const doctor = await Doctor.findByIdAndDelete(
+      req.params.id
+    );
+
+    if (!doctor) {
+      return res.status(404).json({
+        message: "Doctor Not Found",
+      });
+    }
+
+    res.status(200).json({
+      message: "Doctor Deleted Successfully",
+    });
+
+  } catch (error) {
+
+    res.status(500).json({
+      message: error.message,
+    });
+
+  }
+};
+
+module.exports = {
+  getDoctors,
+  getDoctorById,
+  createDoctor,
+  updateDoctor,
+  deleteDoctor,
+};
+
+otp.js
+
+const mongoose = require("mongoose");
+
+const otpSchema = new mongoose.Schema(
+  {
+    email: {
+      type: String,
+      required: true,
+    },
+
+    otp: {
+      type: String,
+      required: true,
+    },
+
+    createdAt: {
+      type: Date,
+      default: Date.now,
+      expires: 300
+    }
+  }
+);
+
+module.exports =
+  mongoose.model("Otp", otpSchema);
