@@ -1,6 +1,6 @@
 /*
   Clean doctor frontend logic implementing the flow described in the spec:
-  - Register -> OTP -> Upload Documents -> Login -> Dashboard
+  - Register -> Upload Documents -> Login -> Dashboard
   - Uses `apiCall` and helpers from config.js where appropriate
 */
 
@@ -65,8 +65,9 @@ if (doctorRegisterForm) {
       });
 
       localStorage.setItem("doctorEmail", email);
-      showAlert("Registration submitted. Please verify your email.", "success");
-      setTimeout(() => window.location.href = "otp.html", 300);
+      if (data.token) setAuthData(data.token, data.user);
+      showAlert("Registration submitted. Please upload your documents.", "success");
+      setTimeout(() => window.location.href = "documents.html", 300);
     } catch (err) {
       showAlert(err.message || "Registration failed", "error");
     } finally {

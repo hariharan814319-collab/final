@@ -1,6 +1,7 @@
 const User = require("../models/User");
 const Doctor = require("../models/Doctor");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 const registerDoctor = async (req, res) => {
   try {
@@ -66,9 +67,27 @@ const registerDoctor = async (req, res) => {
 
       });
 
+    const token = jwt.sign(
+      {
+        id: user._id,
+        role: user.role,
+      },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "7d",
+      }
+    );
+
     res.status(201).json({
       message:
-        "Doctor Registration Submitted. Please verify your email.",
+        "Doctor Registration Submitted. Please upload your documents.",
+      token,
+      user: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+      },
       doctor
     });
 
