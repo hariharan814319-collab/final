@@ -66,8 +66,8 @@ if (doctorRegisterForm) {
 
       localStorage.setItem("doctorEmail", email);
       if (data.token) setAuthData(data.token, data.user);
-      showAlert("Registration submitted. Please upload your documents.", "success");
-      setTimeout(() => window.location.href = "documents.html", 300);
+      showAlert("Registration submitted. Please login now.", "success");
+      setTimeout(() => window.location.href = "login.html", 300);
     } catch (err) {
       showAlert(err.message || "Registration failed", "error");
     } finally {
@@ -76,56 +76,8 @@ if (doctorRegisterForm) {
   });
 }
 
-// ===== OTP PAGE =====
-const doctorEmailField = document.getElementById("doctorEmail");
-const sendOtpBtn = document.getElementById("sendOtpBtn");
-const verifyOtpBtn = document.getElementById("verifyOtpBtn");
-
-if (doctorEmailField) {
-  doctorEmailField.value = localStorage.getItem("doctorEmail") || "";
-  if (!doctorEmailField.value) {
-    showAlert("Please complete doctor registration first.", "warning");
-  }
-}
-
-if (sendOtpBtn) {
-  sendOtpBtn.addEventListener("click", async () => {
-    const email = doctorEmailField?.value || localStorage.getItem("doctorEmail");
-    if (!email) { showAlert("No email available. Please register first.", "warning"); return; }
-    setButtonLoading(sendOtpBtn, true, "Sending OTP...");
-    try {
-      await apiCall("/otp/send", { method: "POST", body: JSON.stringify({ email }) });
-      localStorage.setItem("doctorEmail", email);
-      showAlert("OTP sent to your email", "success");
-    } catch (err) {
-      showAlert(err.message || "Failed to send OTP", "error");
-    } finally {
-      setButtonLoading(sendOtpBtn, false, "Send OTP");
-    }
-  });
-}
-
-if (verifyOtpBtn) {
-  verifyOtpBtn.addEventListener("click", async () => {
-    const email = doctorEmailField?.value || localStorage.getItem("doctorEmail");
-    const otp = (document.getElementById("otp") || {}).value?.trim();
-    if (!email) { showAlert("No email available. Please register first.", "warning"); return; }
-    if (!otp) { showAlert("Please enter OTP", "warning"); return; }
-    setButtonLoading(verifyOtpBtn, true, "Verifying...");
-    try {
-      const data = await apiCall("/otp/verify", { method: "POST", body: JSON.stringify({ email, otp }) });
-      // store token so subsequent document upload (protected) works
-      if (data.token) setAuthData(data.token, data.user);
-      localStorage.setItem("doctorEmail", email);
-      showAlert("OTP verified. Proceed to upload documents.", "success");
-      setTimeout(() => window.location.href = "documents.html", 300);
-    } catch (err) {
-      showAlert(err.message || "OTP verification failed", "error");
-    } finally {
-      setButtonLoading(verifyOtpBtn, false, "Verify OTP");
-    }
-  });
-}
+// ===== OTP PAGE - REMOVED =====
+// OTP verification has been removed for simplified login flow
 
 // ===== DOCUMENTS UPLOAD =====
 const uploadDoctorDocumentsBtn = document.getElementById("uploadDoctorDocumentsBtn");
