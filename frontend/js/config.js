@@ -1,16 +1,5 @@
 const REMOTE_API_BASE = "https://final-mhm1.onrender.com/api";
-const API_BASE = (function() {
-    try {
-        const host = window.location.hostname;
-        const protocol = window.location.protocol;
-        if (protocol === 'file:' || host === 'localhost' || host === '127.0.0.1') {
-            return 'http://localhost:5000/api';
-        }
-    } catch (e) {
-        // fallback to remote if any issue accessing window
-    }
-    return REMOTE_API_BASE;
-})();
+const API_BASE = REMOTE_API_BASE;
 function getToken() { return localStorage.getItem("token"); }
 const API_ORIGIN = API_BASE.replace("/api", "");
 const DEFAULT_USER_PHOTO = "../assets/default-user.png";
