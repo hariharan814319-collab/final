@@ -71,6 +71,8 @@ body {
     min-height: 100vh;
     overflow-x: hidden;
     overflow-y: auto;
+    opacity: 1;
+    visibility: visible;
     
     /* FIX: Ensure background is immediately visible */
     background-color: #030712;
@@ -226,6 +228,8 @@ body::before {
     padding: 40px 20px;
     z-index: 2;
     flex-direction: column;
+    opacity: 1;
+    visibility: visible;
 }
 
 /* =======================================================

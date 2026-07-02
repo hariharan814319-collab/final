@@ -360,7 +360,10 @@ if (document.getElementById('doctorPhoto')) {
 
 function revealWithFade(element) {
   if (!element) return;
-  element.style.display = 'block';
+  element.style.display = '';
+  element.style.opacity = '1';
+  element.style.visibility = 'visible';
+  element.classList.remove('hidden');
   element.classList.add('fade-in');
   requestAnimationFrame(() => {
     element.classList.add('visible');
@@ -373,12 +376,16 @@ function initDoctorAuthSkeletons() {
   if (loginSkeleton && loginForm) {
     loginSkeleton.remove();
     revealWithFade(loginForm);
+  } else if (loginForm) {
+    revealWithFade(loginForm);
   }
 
   const registerSkeleton = document.getElementById('registerSkeleton');
   const registerForm = document.getElementById('doctorRegisterForm');
   if (registerSkeleton && registerForm) {
     registerSkeleton.remove();
+    revealWithFade(registerForm);
+  } else if (registerForm) {
     revealWithFade(registerForm);
   }
 }
@@ -388,3 +395,5 @@ if (document.readyState === 'loading') {
 } else {
   initDoctorAuthSkeletons();
 }
+
+window.addEventListener('load', initDoctorAuthSkeletons);

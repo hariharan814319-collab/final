@@ -160,6 +160,32 @@ function hideLoader() {
     if (loader) loader.remove();
 }
 
+function revealForm(form, fallbackDisplay = "") {
+    if (!form) return;
+    form.style.display = fallbackDisplay;
+    form.style.opacity = "1";
+    form.style.visibility = "visible";
+    form.classList.remove("hidden");
+    if (form.classList.contains("fade-in")) {
+        requestAnimationFrame(() => form.classList.add("visible"));
+    }
+}
+
+function ensureUiVisibility() {
+    document.querySelectorAll("form[style*='display:none']").forEach((form) => {
+        form.style.display = "";
+        form.style.opacity = "1";
+        form.style.visibility = "visible";
+    });
+
+    document.querySelectorAll(".glass-card, .dashboard-container, .landing-container").forEach((el) => {
+        if (el) {
+            el.style.opacity = "1";
+            el.style.visibility = "visible";
+        }
+    });
+}
+
 // ===== API HELPERS =====
 async function apiCall(endpoint, options = {}) {
     const defaultOptions = {
@@ -211,6 +237,10 @@ function clearAuthData() {
 
 // ===== PAGE PROTECTION =====
 document.addEventListener("DOMContentLoaded", () => {
+    ensureUiVisibility();
+    window.setTimeout(ensureUiVisibility, 300);
+    window.addEventListener("load", ensureUiVisibility);
+
     const path = window.location.pathname;
     
     if (path.includes("/patient/dashboard.html") || path.includes("/doctor/dashboard.html") || path.includes("/admin/dashboard.html")) {
