@@ -96,11 +96,13 @@ function setButtonLoading(button, isLoading, loadingText) {
     if (!button) return;
     if (isLoading) {
         button.dataset.originalText = button.innerText;
-        button.innerText = loadingText || "Please wait...";
+        button.innerHTML = `<span class="spinner"></span>${loadingText || "Please wait..."}`;
         button.disabled = true;
+        button.style.opacity = "0.8";
         return;
     }
     button.disabled = false;
+    button.style.opacity = "1";
     if (button.dataset.originalText) {
         button.innerText = button.dataset.originalText;
         delete button.dataset.originalText;
